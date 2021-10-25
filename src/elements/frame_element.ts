@@ -1,5 +1,4 @@
-import { FetchResponse } from "../http/fetch_response"
-import { Snapshot } from "../core/snapshot"
+import { FrameVisitOptions } from "../core/frames/frame_visit"
 import { LinkInterceptorDelegate } from "../core/frames/link_interceptor"
 import { FormSubmitObserverDelegate } from "../observers/form_submit_observer"
 
@@ -13,15 +12,12 @@ export type FrameElementObservedAttribute = keyof FrameElement & ("disabled" | "
 export interface FrameElementDelegate extends LinkInterceptorDelegate, FormSubmitObserverDelegate {
   connect(): void
   disconnect(): void
+  visit(options: Partial<FrameVisitOptions>): Promise<void>
   completeChanged(): void
   loadingStyleChanged(): void
   sourceURLChanged(): void
   sourceURLReloaded(): Promise<void>
   disabledChanged(): void
-  loadResponse(response: FetchResponse): void
-  proposeVisitIfNavigatedWithAction(frame: FrameElement, element: Element, submitter?: HTMLElement): void
-  fetchResponseLoaded: (fetchResponse: FetchResponse) => void
-  visitCachedSnapshot: (snapshot: Snapshot) => void
   isLoading: boolean
 }
 

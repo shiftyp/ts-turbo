@@ -25,6 +25,10 @@ declare global {
       equalIgnoringWhitespace(actual: string | null | undefined, expected: string, message?: string): void
     }
   }
+
+  interface Window {
+    savedElement: HTMLElement
+  }
 }
 
 assert.equalIgnoringWhitespace = function (actual: string | null | undefined, expected: string, message?: string) {

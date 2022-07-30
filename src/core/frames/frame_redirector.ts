@@ -3,14 +3,15 @@ import { FrameElement } from "../../elements/frame_element"
 import { LinkInterceptor, LinkInterceptorDelegate } from "./link_interceptor"
 import { expandURL, getAction, locationIsVisitable } from "../url"
 import { Session } from "../session"
+
 export class FrameRedirector implements LinkInterceptorDelegate, FormSubmitObserverDelegate {
-  readonly session: Session
+  readonly delegate: Session
   readonly element: Element
   readonly linkInterceptor: LinkInterceptor
   readonly formSubmitObserver: FormSubmitObserver
 
-  constructor(session: Session, element: Element) {
-    this.session = session
+  constructor(delegate: Session, element: Element) {
+    this.delegate = delegate
     this.element = element
     this.linkInterceptor = new LinkInterceptor(this, element)
     this.formSubmitObserver = new FormSubmitObserver(this, element)
@@ -26,7 +27,7 @@ export class FrameRedirector implements LinkInterceptorDelegate, FormSubmitObser
     this.formSubmitObserver.stop()
   }
 
-  shouldInterceptLinkClick(element: Element, _location: string, _event: MouseEvent) {
+  shouldInterceptLinkClick(element: HTMLElement, _location: string, _event: MouseEvent) {
     return this.shouldRedirect(element)
   }
 
@@ -37,7 +38,7 @@ export class FrameRedirector implements LinkInterceptorDelegate, FormSubmitObser
     }
   }
 
-  willSubmitForm(element: HTMLFormElement, submitter?: HTMLElement) {
+  willSubmitForm(element: HTMLFormElement, submitter?: HTMLInputElement) {
     return (
       element.closest("turbo-frame") == null &&
       this.shouldSubmit(element, submitter) &&
@@ -52,7 +53,7 @@ export class FrameRedirector implements LinkInterceptorDelegate, FormSubmitObser
     }
   }
 
-  private shouldSubmit(form: HTMLFormElement, submitter?: HTMLElement) {
+  private shouldSubmit(form: HTMLFormElement, submitter?: HTMLInputElement) {
     const action = getAction(form, submitter)
     const meta = this.element.ownerDocument.querySelector<HTMLMetaElement>(`meta[name="turbo-root"]`)
     const rootLocation = expandURL(meta?.content ?? "/")
@@ -60,11 +61,11 @@ export class FrameRedirector implements LinkInterceptorDelegate, FormSubmitObser
     return this.shouldRedirect(form, submitter) && locationIsVisitable(action, rootLocation)
   }
 
-  private shouldRedirect(element: Element, submitter?: HTMLElement) {
+  private shouldRedirect(element: HTMLElement, submitter?: HTMLInputElement) {
     const isNavigatable =
       element instanceof HTMLFormElement
-        ? this.session.submissionIsNavigatable(element, submitter)
-        : this.session.elementIsNavigatable(element)
+        ? this.delegate.submissionIsNavigatable(element, submitter)
+        : this.delegate.elementIsNavigatable(element)
 
     if (isNavigatable) {
       const frame = this.findFrameElement(element, submitter)

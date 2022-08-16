@@ -185,3 +185,32 @@ export function findClosestRecursively(element, selector) {
     )
   }
 }
+
+export function elementIsFocusable(element) {
+  const inertDisabledOrHidden = "[inert], :disabled, [hidden], details:not([open]), dialog:not([open])"
+
+  return !!element && element.closest(inertDisabledOrHidden) == null && typeof element.focus == "function"
+}
+
+export function queryAutofocusableElement(elementOrDocumentFragment) {
+  for (const element of elementOrDocumentFragment.querySelectorAll("[autofocus]")) {
+    if (elementIsFocusable(element)) return element
+    else continue
+  }
+
+  return null
+}
+
+export async function around(callback, reader) {
+  const before = reader()
+  await waitForCallback(callback)
+  const after = reader()
+
+  return [before, after]
+}
+
+export function waitForCallback(callback) {
+  callback()
+
+  return nextAnimationFrame()
+}

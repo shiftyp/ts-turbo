@@ -1,6 +1,6 @@
 import { FetchRequest, FetchMethod, fetchMethodFromString } from "../../http/fetch_request"
 import { expandURL } from "../url"
-import { dispatch, getAttribute, getMetaContent, hasAttribute } from "../../util"
+import { dispatch, getAttribute, getMetaContent, getVisitAction, hasAttribute } from "../../util"
 import { StreamMessage } from "../streams/stream_message"
 
 export const FormSubmissionState = {
@@ -126,6 +126,12 @@ export class FormSubmission {
 
     if (this.requestAcceptsTurboStreamResponse(request)) {
       request.acceptResponseType(StreamMessage.contentType)
+    }
+
+    const turboAction = getVisitAction(this.submitter, this.formElement)
+
+    if (turboAction) {
+      request.headers["Turbo-Action"] = turboAction
     }
   }
 

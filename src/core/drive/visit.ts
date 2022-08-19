@@ -347,6 +347,8 @@ export class Visit implements FetchRequestDelegate {
     if (this.acceptsStreamResponse) {
       request.acceptResponseType(StreamMessage.contentType)
     }
+
+    request.headers["Turbo-Action"] = this.action
   }
 
   requestStarted() {

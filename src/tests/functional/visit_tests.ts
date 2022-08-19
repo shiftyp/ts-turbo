@@ -114,6 +114,13 @@ test("test turbo:before-fetch-request event.detail encodes searchParams", async 
   assert.ok(url.includes("/src/tests/fixtures/one.html?key=value"))
 })
 
+test("test turbo:before-fetch-request encodes the action", async ({ page }) => {
+  await page.click("#same-origin-link-replace")
+  const { fetchOptions } = await nextEventNamed(page, "turbo:before-fetch-request")
+
+  assert.equal(fetchOptions.headers["Turbo-Action"], "replace", "encodes the action into Turbo-Action")
+})
+
 test("test turbo:before-fetch-response open new site", async ({ page }) => {
   page.evaluate(() =>
     addEventListener(

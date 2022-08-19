@@ -151,6 +151,14 @@ test("test standard POST form submission events", async ({ page }) => {
   await nextEventNamed(page, "turbo:load")
 })
 
+test("test standard POST encodes [data-turbo-action] into Turbo-Action", async ({ page }) => {
+  await page.click("#standard-post-form-replace-submit")
+
+  const { fetchOptions } = await nextEventNamed(page, "turbo:before-fetch-request")
+
+  assert.equal(fetchOptions.headers["Turbo-Action"], "replace", "encodes the action to the Turbo-Action header")
+})
+
 test("test standard POST form submission merges values from both searchParams and body", async ({ page }) => {
   await page.click("#form-action-post-redirect-self-q-b")
   await nextBody(page)

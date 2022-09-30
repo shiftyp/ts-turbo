@@ -7,7 +7,7 @@ import { Visit, VisitDelegate, VisitOptions } from "./visit"
 import { PageSnapshot } from "./page_snapshot"
 
 export type NavigatorDelegate = VisitDelegate & {
-  allowsVisitingLocationWithAction(location: URL, action?: Action): boolean
+  allowsVisitingLocation(location: URL, options: Partial<VisitOptions>): boolean
   visitProposedToLocation(location: URL, options: Partial<VisitOptions>): void
   notifyApplicationAfterVisitingSamePageLocation(oldURL: URL, newURL: URL): void
 }
@@ -16,15 +16,19 @@ export class Navigator {
   readonly delegate: NavigatorDelegate
   formSubmission?: FormSubmission
   currentVisit?: Visit
+  lastVisit?: Visit
+  currentInitiator?: Element
 
   constructor(delegate: NavigatorDelegate) {
     this.delegate = delegate
   }
 
   proposeVisit(location: URL, options: Partial<VisitOptions> = {}) {
-    if (this.delegate.allowsVisitingLocationWithAction(location, options.action)) {
+    if (this.delegate.allowsVisitingLocation(location, options)) {
       if (locationIsVisitable(location, this.view.snapshot.rootLocation)) {
-        this.delegate.visitProposedToLocation(location, options)
+        this.withInitiator(options.initiator, () => {
+          this.delegate.visitProposedToLocation(location, options)
+        })
       } else {
         window.location.href = location.toString()
       }
@@ -34,6 +38,7 @@ export class Navigator {
   startVisit(locatable: Locatable, restorationIdentifier: string, options: Partial<VisitOptions> = {}) {
     this.stop()
     this.currentVisit = new Visit(this, expandURL(locatable), restorationIdentifier, {
+      initiator: this.currentInitiator,
       referrer: this.location,
       ...options,
     })
@@ -165,5 +170,21 @@ export class Navigator {
 
   getActionForFormSubmission({ submitter, formElement }: FormSubmission): Action {
     return getVisitAction(submitter, formElement) || "advance"
+  }
+
+  // Private
+
+  withInitiator(initiator: Element | undefined, callback: () => void) {
+    this.currentInitiator = initiator
+    callback.call(this)
+    delete this.currentInitiator
+  }
+
+  // Private
+
+  withInitiator(initiator: Element | undefined, callback: () => void) {
+    this.currentInitiator = initiator
+    callback.call(this)
+    delete this.currentInitiator
   }
 }

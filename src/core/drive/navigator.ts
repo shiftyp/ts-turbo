@@ -8,7 +8,7 @@ import { Visit, VisitDelegate, VisitOptions } from "./visit"
 import { PageSnapshot } from "./page_snapshot"
 
 export type NavigatorDelegate = VisitDelegate & {
-  allowsVisitingLocationWithAction(location: URL, action?: Action): boolean
+  allowsVisitingLocation(location: URL, options: Partial<VisitOptions>): boolean
   visitProposedToLocation(location: URL, options: Partial<VisitOptions>): void
   notifyApplicationAfterVisitingSamePageLocation(oldURL: URL, newURL: URL): void
 }
@@ -18,15 +18,18 @@ export class Navigator {
   formSubmission?: FormSubmission
   currentVisit?: Visit
   lastVisit?: Visit
+  currentInitiator?: Element
 
   constructor(delegate: NavigatorDelegate) {
     this.delegate = delegate
   }
 
   proposeVisit(location: URL, options: Partial<VisitOptions> = {}) {
-    if (this.delegate.allowsVisitingLocationWithAction(location, options.action)) {
+    if (this.delegate.allowsVisitingLocation(location, options)) {
       if (locationIsVisitable(location, this.view.snapshot.rootLocation)) {
-        this.delegate.visitProposedToLocation(location, options)
+        this.withInitiator(options.initiator, () => {
+          this.delegate.visitProposedToLocation(location, options)
+        })
       } else {
         window.location.href = location.toString()
       }
@@ -37,6 +40,7 @@ export class Navigator {
     this.lastVisit = this.currentVisit
     this.stop()
     this.currentVisit = new Visit(this, expandURL(locatable), restorationIdentifier, {
+      initiator: this.currentInitiator,
       referrer: this.location,
       ...options,
     })
@@ -171,5 +175,13 @@ export class Navigator {
     const { formElement, submitter } = formSubmission
     const action = getAttribute("data-turbo-action", submitter, formElement)
     return isAction(action) ? action : "advance"
+  }
+
+  // Private
+
+  withInitiator(initiator: Element | undefined, callback: () => void) {
+    this.currentInitiator = initiator
+    callback.call(this)
+    delete this.currentInitiator
   }
 }

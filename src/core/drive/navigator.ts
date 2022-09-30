@@ -17,7 +17,7 @@ export class Navigator {
   formSubmission?: FormSubmission
   currentVisit?: Visit
   lastVisit?: Visit
-  currentVisitOptions?: Partial<VisitOptions>
+  currentVisitOptions: Partial<VisitOptions> = {}
 
   constructor(delegate: NavigatorDelegate) {
     this.delegate = delegate
@@ -185,6 +185,6 @@ export class Navigator {
   withVisitOptions(options: Partial<VisitOptions>, callback: () => void) {
     this.currentVisitOptions = options
     callback.call(this)
-    delete this.currentVisitOptions
+    this.currentVisitOptions = {}
   }
 }

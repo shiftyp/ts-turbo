@@ -207,9 +207,9 @@ export class Session
     )
   }
 
-  visitProposedToLocation(location: URL, options: Partial<VisitOptions>) {
+  visitProposedToLocation(location: URL, options: Partial<TransferableVisitOptions>) {
     extendURLWithDeprecatedProperties(location)
-    this.adapter.visitProposedToLocation(location, this.sanitizeVisitOptionsForTransfer(options))
+    this.adapter.visitProposedToLocation(location, options)
   }
 
   visitStarted(visit: Visit) {
@@ -429,11 +429,6 @@ export class Session
         return false
       }
     }
-  }
-
-  sanitizeVisitOptionsForTransfer(options: Partial<VisitOptions>): Partial<TransferableVisitOptions> {
-    const { initiator, referrer, visitCachedSnapshot, ...rest } = options
-    return rest
   }
 
   // Private

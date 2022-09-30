@@ -4,12 +4,12 @@ import { FetchResponse } from "../../http/fetch_response"
 import { FormSubmission } from "./form_submission"
 import { expandURL, getAnchor, getRequestURL, Locatable, locationIsVisitable } from "../url"
 import { getAttribute } from "../../util"
-import { Visit, VisitDelegate, VisitOptions } from "./visit"
+import { Visit, VisitDelegate, VisitOptions, TransferableVisitOptions } from "./visit"
 import { PageSnapshot } from "./page_snapshot"
 
 export type NavigatorDelegate = VisitDelegate & {
   allowsVisitingLocation(location: URL, options: Partial<VisitOptions>): boolean
-  visitProposedToLocation(location: URL, options: Partial<VisitOptions>): void
+  visitProposedToLocation(location: URL, options: Partial<TransferableVisitOptions>): void
   notifyApplicationAfterVisitingSamePageLocation(oldURL: URL, newURL: URL): void
 }
 
@@ -27,8 +27,8 @@ export class Navigator {
   proposeVisit(location: URL, options: Partial<VisitOptions> = {}) {
     if (this.delegate.allowsVisitingLocation(location, options)) {
       if (locationIsVisitable(location, this.view.snapshot.rootLocation)) {
-        this.withVisitOptions(options, () => {
-          this.delegate.visitProposedToLocation(location, options)
+        this.withTransferableVisitOptions(options, (transferableOptions) => {
+          this.delegate.visitProposedToLocation(location, transferableOptions)
         })
       } else {
         window.location.href = location.toString()
@@ -179,9 +179,17 @@ export class Navigator {
 
   // Private
 
-  withVisitOptions(options: Partial<VisitOptions>, callback: () => void) {
+  withTransferableVisitOptions(
+    options: Partial<VisitOptions>,
+    callback: (transferableOptions: Partial<TransferableVisitOptions>) => void
+  ) {
     this.currentVisitOptions = options
-    callback.call(this)
+    callback.call(this, this.sanitizeVisitOptionsForTransfer(options))
     this.currentVisitOptions = {}
+  }
+
+  sanitizeVisitOptionsForTransfer(options: Partial<VisitOptions>): Partial<TransferableVisitOptions> {
+    const { initiator, referrer, visitCachedSnapshot, ...rest } = options
+    return rest
   }
 }

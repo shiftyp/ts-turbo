@@ -18,7 +18,7 @@ export class Navigator {
   formSubmission?: FormSubmission
   currentVisit?: Visit
   lastVisit?: Visit
-  currentInitiator?: Element
+  currentVisitOptions?: Partial<VisitOptions>
 
   constructor(delegate: NavigatorDelegate) {
     this.delegate = delegate
@@ -27,7 +27,7 @@ export class Navigator {
   proposeVisit(location: URL, options: Partial<VisitOptions> = {}) {
     if (this.delegate.allowsVisitingLocation(location, options)) {
       if (locationIsVisitable(location, this.view.snapshot.rootLocation)) {
-        this.withInitiator(options.initiator, () => {
+        this.withVisitOptions(options, () => {
           this.delegate.visitProposedToLocation(location, options)
         })
       } else {
@@ -40,8 +40,8 @@ export class Navigator {
     this.lastVisit = this.currentVisit
     this.stop()
     this.currentVisit = new Visit(this, expandURL(locatable), restorationIdentifier, {
-      initiator: this.currentInitiator,
       referrer: this.location,
+      ...this.currentVisitOptions,
       ...options,
     })
     this.currentVisit.start()
@@ -179,9 +179,9 @@ export class Navigator {
 
   // Private
 
-  withInitiator(initiator: Element | undefined, callback: () => void) {
-    this.currentInitiator = initiator
+  withVisitOptions(options: Partial<VisitOptions>, callback: () => void) {
+    this.currentVisitOptions = options
     callback.call(this)
-    delete this.currentInitiator
+    delete this.currentVisitOptions
   }
 }

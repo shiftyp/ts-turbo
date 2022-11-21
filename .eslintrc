@@ -16,7 +16,12 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-namespace": ["error", { "allowDeclarations": true }],
     "@typescript-eslint/no-non-null-assertion": "off",
+<<<<<<< HEAD
     "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+=======
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-empty-interface": "off",
+>>>>>>> b47ac72... Reorganize Turbo Events and declare events on `WindowEventMap`
     "no-unused-vars": "off",
     "prettier/prettier": ["error"]
   }

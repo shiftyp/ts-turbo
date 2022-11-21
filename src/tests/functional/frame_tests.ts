@@ -19,6 +19,7 @@ import {
   searchParams,
 } from "../helpers/page"
 
+<<<<<<< HEAD
 declare global {
   namespace Chai {
     interface AssertStatic {
@@ -26,6 +27,16 @@ declare global {
     }
   }
 }
+=======
+import { FrameElement } from "../../elements"
+import { TurboFrameMissingEvent } from "../../events"
+
+assert.equal = function (actual: any, expected: any, message?: string) {
+  actual = typeof actual == "string" ? actual.trim() : actual
+  expected = typeof expected == "string" ? expected.trim() : expected
+
+  const assertExpectation = new Assertion(expected)
+>>>>>>> b47ac72... Reorganize Turbo Events and declare events on `WindowEventMap`
 
 assert.equalIgnoringWhitespace = function (actual: string | null | undefined, expected: string, message?: string) {
   new Assertion(actual?.trim()).to.equal(expected.trim(), message)
@@ -199,10 +210,10 @@ test("failing to follow a link to a page without a matching frame shows an error
 test("test the turbo:frame-missing event following a link to a page without a matching frame can be handled", async ({
   page,
 }) => {
-  await page.locator("#missing").evaluate((frame) => {
+  await page.locator("#missing").evaluate((frame: FrameElement) => {
     frame.addEventListener(
       "turbo:frame-missing",
-      ((event) => {
+      (event: TurboFrameMissingEvent) => {
         if (event.target instanceof Element) {
           event.preventDefault()
           event.target.textContent = "Overridden"
@@ -220,10 +231,10 @@ test("test the turbo:frame-missing event following a link to a page without a ma
 test("test the turbo:frame-missing event following a link to a page without a matching frame can drive a Visit", async ({
   page,
 }) => {
-  await page.locator("#missing").evaluate((frame) => {
+  await page.locator("#missing").evaluate((frame: FrameElement) => {
     frame.addEventListener(
       "turbo:frame-missing",
-      ((event: CustomEvent) => {
+      (event: TurboFrameMissingEvent) => {
         event.preventDefault()
         const { response, visit } = event.detail
 

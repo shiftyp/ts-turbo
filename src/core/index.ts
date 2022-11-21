@@ -13,6 +13,7 @@ import { FormSubmission } from "./drive/form_submission"
 const session = new Session()
 const cache = new Cache(session)
 const { navigator } = session
+<<<<<<< HEAD
 export { navigator, session, cache, PageRenderer, PageSnapshot, FrameRenderer }
 export type {
   TurboBeforeCacheEvent,
@@ -32,6 +33,11 @@ export type { TurboFrameMissingEvent } from "./frames/frame_controller"
 
 export { StreamActions } from "./streams/stream_actions"
 export type { TurboStreamAction, TurboStreamActions } from "./streams/stream_actions"
+=======
+
+export { navigator, session, cache, PageRenderer, PageSnapshot, FrameRenderer }
+export { StreamActions, TurboStreamAction, TurboStreamActions } from "./streams/stream_actions"
+>>>>>>> b47ac72... Reorganize Turbo Events and declare events on `WindowEventMap`
 
 /**
  * Starts the main session.

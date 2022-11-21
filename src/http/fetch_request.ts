@@ -1,7 +1,9 @@
 import { FetchResponse } from "./fetch_response"
 import { FrameElement } from "../elements/frame_element"
+import { TurboBeforeFetchRequestEvent, TurboBeforeFetchResponseEvent, TurboFetchRequestErrorEvent } from "../events"
 import { dispatch } from "../util"
 
+<<<<<<< HEAD
 export type TurboBeforeFetchRequestEvent = CustomEvent<{
   fetchOptions: RequestInit
   url: URL
@@ -15,6 +17,8 @@ export type TurboFetchRequestErrorEvent = CustomEvent<{
   error: Error
 }>
 
+=======
+>>>>>>> b47ac72... Reorganize Turbo Events and declare events on `WindowEventMap`
 export interface FetchRequestDelegate {
   referrer?: URL
 

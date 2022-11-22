@@ -440,6 +440,8 @@ test("test navigating back whilst a visit is in-flight", async ({ page }) => {
 
 test("test ignores links with a [target] attribute that target an iframe with a matching [name]", async ({ page }) => {
   await page.click("#link-target-iframe")
+<<<<<<< HEAD
+=======
   await nextBeat()
   await noNextEventNamed(page, "turbo:load")
 
@@ -478,6 +480,7 @@ test("test ignores forms with a button[formtarget] attribute that targets an ifr
   page,
 }) => {
   await page.click("#button-formtarget-iframe")
+>>>>>>> e5e188f... `reuseExistingServer` in `CI`
   await nextBeat()
   await noNextEventNamed(page, "turbo:load")
 
@@ -485,6 +488,47 @@ test("test ignores forms with a button[formtarget] attribute that targets an ifr
   assert.equal(await pathnameForIFrame(page, "iframe"), "/src/tests/fixtures/one.html")
 })
 
+<<<<<<< HEAD
+test("test ignores links with a [target] attribute that targets an iframe with [name='']", async ({ page }) => {
+  await page.click("#link-target-empty-name-iframe")
+  await nextBeat()
+  await noNextEventNamed(page, "turbo:load")
+
+  assert.equal(pathname(page.url()), "/src/tests/fixtures/one.html")
+})
+
+test("test ignores forms with a [target] attribute that targets an iframe with a matching [name]", async ({ page }) => {
+  await page.click("#form-target-iframe button")
+  await nextBeat()
+  await noNextEventNamed(page, "turbo:load")
+
+  assert.equal(pathname(page.url()), "/src/tests/fixtures/navigation.html")
+  assert.equal(await pathnameForIFrame(page, "iframe"), "/src/tests/fixtures/one.html")
+})
+
+test("test ignores forms with a button[formtarget] attribute that targets an iframe with [name='']", async ({
+  page,
+}) => {
+  await page.click("#form-target-empty-name-iframe button")
+  await nextBeat()
+  await noNextEventNamed(page, "turbo:load")
+
+  assert.equal(pathname(page.url()), "/src/tests/fixtures/one.html")
+})
+
+test("test ignores forms with a button[formtarget] attribute that targets an iframe with a matching [name]", async ({
+  page,
+}) => {
+  await page.click("#button-formtarget-iframe")
+  await nextBeat()
+  await noNextEventNamed(page, "turbo:load")
+
+  assert.equal(pathname(page.url()), "/src/tests/fixtures/navigation.html")
+  assert.equal(await pathnameForIFrame(page, "iframe"), "/src/tests/fixtures/one.html")
+})
+
+=======
+>>>>>>> e5e188f... `reuseExistingServer` in `CI`
 test("test ignores forms with a [target] attribute that target an iframe with [name='']", async ({ page }) => {
   await page.click("#button-formtarget-empty-name-iframe")
   await nextBeat()

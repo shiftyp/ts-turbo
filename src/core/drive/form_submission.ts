@@ -150,7 +150,11 @@ export class FormSubmission {
   // Fetch request delegate
 
   prepareRequest(request: FetchRequest) {
+<<<<<<< HEAD
     if (!request.isSafe) {
+=======
+    if (!request.isIdempotent) {
+>>>>>>> e5e188f... `reuseExistingServer` in `CI`
       const token = getCookieValue(getMetaContent("csrf-param")) || getMetaContent("csrf-token")
       if (token) {
         request.headers["X-CSRF-Token"] = token

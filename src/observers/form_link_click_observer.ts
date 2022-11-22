@@ -3,7 +3,11 @@ import { LinkClickObserver, LinkClickObserverDelegate } from "./link_click_obser
 import { getVisitAction } from "../util"
 =======
 import { TurboSubmitEndEvent } from "../events"
+<<<<<<< HEAD
 >>>>>>> b47ac72... Reorganize Turbo Events and declare events on `WindowEventMap`
+=======
+import { getVisitAction } from "../util"
+>>>>>>> e5e188f... `reuseExistingServer` in `CI`
 
 export type FormLinkClickObserverDelegate = {
   willSubmitFormLinkToLocation(link: Element, location: URL, event: MouseEvent): boolean

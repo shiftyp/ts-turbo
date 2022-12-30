@@ -1,5 +1,7 @@
 import { Action } from "../types"
-import { getVisitAction } from "../../util"
+
+import { getVisitAction, getProgressBarValue } from "../../util"
+import { FetchMethod } from "../../http/fetch_request"
 import { FetchResponse } from "../../http/fetch_response"
 import { FormSubmission } from "./form_submission"
 import { expandURL, getAnchor, getRequestURL, Locatable, locationIsVisitable } from "../url"
@@ -91,8 +93,10 @@ export class Navigator {
 
         const { statusCode, redirected } = fetchResponse
         const action = this.getActionForFormSubmission(formSubmission)
+        const withProgressBar = this.getProgressBarForFormSubmission(formSubmission)
         const visitOptions = {
           action,
+          withProgressBar,
           shouldCacheSnapshot,
           response: { statusCode, responseHTML, redirected },
         }
@@ -165,5 +169,11 @@ export class Navigator {
 
   getActionForFormSubmission({ submitter, formElement }: FormSubmission): Action {
     return getVisitAction(submitter, formElement) || "advance"
+  }
+
+  // Private
+
+  getProgressBarForFormSubmission({ submitter, formElement }: FormSubmission): boolean {
+    return getProgressBarValue(submitter, formElement)
   }
 }

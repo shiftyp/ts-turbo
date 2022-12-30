@@ -17,6 +17,7 @@ import {
   getHistoryMethodForAction,
   getVisitAction,
   getProgressBarValue,
+  getProgressBarValue,
 } from "../../util"
 import { FormSubmission, FormSubmissionDelegate } from "../drive/form_submission"
 import { Snapshot } from "../snapshot"
@@ -63,7 +64,7 @@ export class FrameController
   private hasBeenLoaded = false
   private ignoredAttributes: Set<FrameElementObservedAttribute> = new Set()
   private action: Action | null = null
-  private withProgressBar: boolean | null = null
+  private withProgressBar = false
   readonly restorationIdentifier: string
   private previousFrameElement?: FrameElement
   private currentNavigationElement?: Element
@@ -405,7 +406,7 @@ export class FrameController
           }
 
           if (this.action) options.action = this.action
-          if (this.withProgressBar != null) options.withProgressBar = this.withProgressBar
+          if (this.withProgressBar) options.withProgressBar = this.withProgressBar
 
           session.visit(frame.src, options)
         }

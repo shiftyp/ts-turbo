@@ -169,10 +169,10 @@ export function getVisitAction(...elements: (Element | undefined)[]): Action | n
   return isAction(action) ? action : null
 }
 
-export function getProgressBarValue(...elements: (Element | undefined)[]): boolean {
+export function getProgressBarValue(...elements: (Element | undefined)[]): boolean | null {
   const progressBar = getAttribute("data-turbo-progress-bar", ...elements)
 
-  return progressBar == "true"
+  return isProgressBar(progressBar) ? progressBar == "true" : null
 }
 
 export function getProgressBarValue(...elements: (Element | undefined)[]): boolean | null {

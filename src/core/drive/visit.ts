@@ -53,7 +53,7 @@ export type VisitOptions = {
   shouldCacheSnapshot: boolean
   frame?: string
   acceptsStreamResponse: boolean
-  withProgressBar: boolean
+  withProgressBar: boolean | null
 }
 
 const defaultOptions: VisitOptions = {
@@ -64,7 +64,7 @@ const defaultOptions: VisitOptions = {
   updateHistory: true,
   shouldCacheSnapshot: true,
   acceptsStreamResponse: false,
-  withProgressBar: false,
+  withProgressBar: null,
 }
 
 export type VisitResponse = {
@@ -89,7 +89,7 @@ export class Visit implements FetchRequestDelegate {
   readonly visitCachedSnapshot: (snapshot: Snapshot) => void
   readonly willRender: boolean
   readonly updateHistory: boolean
-  readonly withProgressBar: boolean
+  readonly withProgressBar: boolean | null
 
   followedRedirect = false
   frame?: number

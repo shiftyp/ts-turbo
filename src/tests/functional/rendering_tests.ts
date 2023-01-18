@@ -602,6 +602,13 @@ test("test rendering a redirect response replaces the body once and only once", 
   assert.ok(await noNextBodyMutation(page), "replaces <body> element once")
 })
 
+test("test rendering a redirect response replaces the body once and only once", async ({ page }) => {
+  await page.click("#redirect-link")
+  await nextBodyMutation(page)
+
+  assert.ok(await noNextBodyMutation(page), "replaces <body> element once")
+})
+
 function deepElementsEqual(
   page: Page,
   left: JSHandle<SVGElement | HTMLElement>[],

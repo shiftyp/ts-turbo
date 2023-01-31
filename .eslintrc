@@ -12,6 +12,7 @@
     "prettier"
   ],
   "rules": {
+<<<<<<< HEAD
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-namespace": ["error", { "allowDeclarations": true }],
@@ -22,6 +23,14 @@
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-empty-interface": "off",
 >>>>>>> b47ac72... Reorganize Turbo Events and declare events on `WindowEventMap`
+=======
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-namespace": ["error", { "allowDeclarations": true }],
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+>>>>>>> 5a18117... Merge branch 'main' into reorganize-events
     "no-unused-vars": "off",
     "prettier/prettier": ["error"]
   }

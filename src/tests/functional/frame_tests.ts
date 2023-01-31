@@ -31,12 +31,22 @@ declare global {
 import { FrameElement } from "../../elements"
 import { TurboFrameMissingEvent } from "../../events"
 
+<<<<<<< HEAD
 assert.equal = function (actual: any, expected: any, message?: string) {
   actual = typeof actual == "string" ? actual.trim() : actual
   expected = typeof expected == "string" ? expected.trim() : expected
 
   const assertExpectation = new Assertion(expected)
 >>>>>>> b47ac72... Reorganize Turbo Events and declare events on `WindowEventMap`
+=======
+declare global {
+  namespace Chai {
+    interface AssertStatic {
+      equalIgnoringWhitespace(actual: string | null | undefined, expected: string, message?: string): void
+    }
+  }
+}
+>>>>>>> 5a18117... Merge branch 'main' into reorganize-events
 
 assert.equalIgnoringWhitespace = function (actual: string | null | undefined, expected: string, message?: string) {
   new Assertion(actual?.trim()).to.equal(expected.trim(), message)

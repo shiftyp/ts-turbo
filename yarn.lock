@@ -275,6 +275,7 @@
     is-module "^1.0.0"
     resolve "^1.19.0"
 
+<<<<<<< HEAD
 "@rollup/plugin-node-resolve@^13.0.4":
   version "13.3.0"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-node-resolve/-/plugin-node-resolve-13.3.0.tgz#da1c5c5ce8316cef96a2f823d111c1e4e498801c"
@@ -292,6 +293,13 @@
   resolved "https://registry.yarnpkg.com/@rollup/plugin-typescript/-/plugin-typescript-11.0.0.tgz#f136272d1df5209daca0cb6f171c574b1d505545"
   integrity sha512-goPyCWBiimk1iJgSTgsehFD5OOFHiAknrRJjqFCudcW8JtWiBlK284Xnn4flqMqg6YAjVG/EE+3aVzrL5qNSzQ==
   dependencies:
+=======
+"@rollup/plugin-typescript@^11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-typescript/-/plugin-typescript-11.0.0.tgz#f136272d1df5209daca0cb6f171c574b1d505545"
+  integrity sha512-goPyCWBiimk1iJgSTgsehFD5OOFHiAknrRJjqFCudcW8JtWiBlK284Xnn4flqMqg6YAjVG/EE+3aVzrL5qNSzQ==
+  dependencies:
+>>>>>>> e108616... Upgrade TypeScript to 4.9 (#861)
     "@rollup/pluginutils" "^5.0.1"
     resolve "^1.22.1"
 
@@ -308,6 +316,18 @@
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-5.0.2.tgz#012b8f53c71e4f6f9cb317e311df1404f56e7a33"
   integrity sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==
+<<<<<<< HEAD
+=======
+  dependencies:
+    "@types/estree" "^1.0.0"
+    estree-walker "^2.0.2"
+    picomatch "^2.3.1"
+
+"@theintern/common@~0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@theintern/common/-/common-0.3.0.tgz#a8351b9ab815fa8b0d846e5373b626994a6e80ad"
+  integrity sha512-VKSyZGEyzmicJPvV5Gxeavm8Xbcr0cETAAqMapWZzA9Q85YHMG8VSrmPFlMrDQ524qE0IqQsTi0IlH8NIaN+eQ==
+>>>>>>> e108616... Upgrade TypeScript to 4.9 (#861)
   dependencies:
     "@types/estree" "^1.0.0"
     estree-walker "^2.0.2"
@@ -593,6 +613,7 @@
   dependencies:
     "@types/node" "*"
 
+<<<<<<< HEAD
 "@types/yauzl@^2.9.1":
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/@types/yauzl/-/yauzl-2.10.0.tgz#b3248295276cf8c6f153ebe6a9aba0c988cb2599"
@@ -872,6 +893,16 @@
     nanocolors "^0.2.1"
     portfinder "^1.0.32"
     source-map "^0.7.3"
+=======
+
+"@typescript-eslint/visitor-keys@5.50.0":
+  version "5.50.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/visitor-keys/-/visitor-keys-5.50.0.tgz#b752ffc143841f3d7bc57d6dd01ac5c40f8c4903"
+  integrity sha512-cdMeD9HGu6EXIeGOh2yVW6oGf9wq8asBgZx7nsR/D36gTfQ0odE5kcRYe5M81vjEFAcPeugXrHg78Imu55F6gg==
+  dependencies:
+    "@typescript-eslint/types" "5.50.0"
+    eslint-visitor-keys "^3.3.0"
+>>>>>>> e108616... Upgrade TypeScript to 4.9 (#861)
 
 accepts@^1.3.5, accepts@~1.3.8:
   version "1.3.8"
@@ -1400,7 +1431,11 @@ debug@2.6.9, debug@^2.6.9:
   dependencies:
     ms "2.0.0"
 
+<<<<<<< HEAD
 debug@4, debug@4.3.4, debug@^4.3.2, debug@^4.3.4:
+=======
+debug@^4.1.0, debug@^4.3.2, debug@^4.3.4:
+>>>>>>> e108616... Upgrade TypeScript to 4.9 (#861)
   version "4.3.4"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.4.tgz#1319f6579357f2338d3337d2cdd4914bb5dcc865"
   integrity sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==
@@ -2120,7 +2155,11 @@ globals@^13.19.0:
   dependencies:
     type-fest "^0.20.2"
 
+<<<<<<< HEAD
 globby@^11.0.1, globby@^11.1.0:
+=======
+globby@^11.1.0:
+>>>>>>> e108616... Upgrade TypeScript to 4.9 (#861)
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/globby/-/globby-11.1.0.tgz#bd4be98bb042f83d796f7e3811991fbe82a0d34b"
   integrity sha512-jhIXaOzy1sb8IyocaruWSn1TjmnBVs8Ayhcy83rmxNJ8q2uWKCAj3CnJY+KpGSXCueAPc0i05kVvVKtP1t9S3g==
@@ -2132,10 +2171,15 @@ globby@^11.0.1, globby@^11.1.0:
     merge2 "^1.4.1"
     slash "^3.0.0"
 
-graphemer@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/graphemer/-/graphemer-1.4.0.tgz#fb2f1d55e0e3a1849aeffc90c4fa0dd53a0e66c6"
-  integrity sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==
+grapheme-splitter@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz#9cf3a665c6247479896834af35cf1dbb4400767e"
+  integrity sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==
+
+grapheme-splitter@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz#9cf3a665c6247479896834af35cf1dbb4400767e"
+  integrity sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==
 
 has-flag@^3.0.0:
   version "3.0.0"
@@ -2805,6 +2849,7 @@ multer@^1.4.2:
     type-is "^1.6.4"
     xtend "^4.0.0"
 
+<<<<<<< HEAD
 nanocolors@^0.2.1:
   version "0.2.13"
   resolved "https://registry.yarnpkg.com/nanocolors/-/nanocolors-0.2.13.tgz#dfd1ed0bfab05e9fe540eb6874525f0a1684099b"
@@ -2814,6 +2859,11 @@ nanoid@^3.1.25:
   version "3.3.4"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.4.tgz#730b67e3cd09e2deacf03c027c81c9d9dbc5e8ab"
   integrity sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==
+
+natural-compare-lite@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/natural-compare-lite/-/natural-compare-lite-1.4.0.tgz#17b09581988979fddafe0201e931ba933c96cbb4"
+  integrity sha512-Tj+HTDSJJKaZnfiuw+iaF9skdPpTo2GtEly5JHnWV/hfv2Qj/9RKsGISQtLh2ox3l5EAGw487hnBee0sIJ6v2g==
 
 natural-compare@^1.4.0:
   version "1.4.0"
@@ -3241,6 +3291,7 @@ resolve-from@^4.0.0:
   resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-4.0.0.tgz#4abcd852ad32dd7baabfe9b40e00a36db5f392e6"
   integrity sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==
 
+<<<<<<< HEAD
 resolve-path@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/resolve-path/-/resolve-path-1.4.0.tgz#c4bda9f5efb2fce65247873ab36bb4d834fe16f7"
@@ -3249,6 +3300,8 @@ resolve-path@^1.4.0:
     http-errors "~1.6.2"
     path-is-absolute "1.0.1"
 
+=======
+>>>>>>> e108616... Upgrade TypeScript to 4.9 (#861)
 resolve@^1.19.0:
   version "1.19.0"
   resolved "https://registry.npmjs.org/resolve/-/resolve-1.19.0.tgz"
@@ -3261,6 +3314,18 @@ resolve@^1.22.1:
   version "1.22.1"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.22.1.tgz#27cb2ebb53f91abb49470a928bba7558066ac177"
   integrity sha512-nBpuuYuY5jFsli/JIs1oldw6fOQCBioohqWZg/2hiaOybXOft4lonv85uDOKXdf8rhyK159cxU5cDcK/NKk8zw==
+<<<<<<< HEAD
+=======
+  dependencies:
+    is-core-module "^2.9.0"
+    path-parse "^1.0.7"
+    supports-preserve-symlinks-flag "^1.0.0"
+
+resolve@~1.20.0:
+  version "1.20.0"
+  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.20.0.tgz#629a013fb3f70755d6f0b7935cc1c2c5378b1975"
+  integrity sha512-wENBPt4ySzg4ybFQW2TT1zMQucPK95HSh/nq2CFTZVOGut2+pQvSsgtda4d26YrYcr067wjbmzOG8byDPBX63A==
+>>>>>>> e108616... Upgrade TypeScript to 4.9 (#861)
   dependencies:
     is-core-module "^2.9.0"
     path-parse "^1.0.7"
@@ -3334,10 +3399,16 @@ semver@^6.0.0:
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
   integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
 
-semver@^7.3.4, semver@^7.5.4:
+semver@^7.3.4, semver@^7.3.7:
   version "7.5.4"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.4.tgz#483986ec4ed38e1c6c48c34894a9182dbff68a6e"
   integrity sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==
+=======
+semver@^7.3.7:
+  version "7.3.8"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.8.tgz#07a78feafb3f7b32347d725e33de7e2a2df67798"
+  integrity sha512-NB1ctGL5rlHrPJtFDVIVzTyQylMLu9N9VICA6HSFJo8MCGVTMW6gfpicwKmmK/dAjTOrqu5l63JJOpDSrAis3A==
+>>>>>>> e108616... Upgrade TypeScript to 4.9 (#861)
   dependencies:
     lru-cache "^6.0.0"
 
@@ -3680,6 +3751,8 @@ ua-parser-js@^1.0.2:
   version "1.0.33"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-1.0.33.tgz#f21f01233e90e7ed0f059ceab46eb190ff17f8f4"
   integrity sha512-RqshF7TPTE0XLYAqmjlu5cLLuGdKrNu9O1KLA/qp39QtbZwuzwv1dT46DZSopoUMsYgXpB3Cv8a03FI8b74oFQ==
+=======
+>>>>>>> e108616... Upgrade TypeScript to 4.9 (#861)
 
 unbzip2-stream@1.4.3:
   version "1.4.3"

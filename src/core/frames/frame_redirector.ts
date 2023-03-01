@@ -1,7 +1,8 @@
+import { HTMLFormSubmission } from "../drive/html_form_submission"
 import { FormSubmitObserver, FormSubmitObserverDelegate } from "../../observers/form_submit_observer"
 import { FrameElement } from "../../elements/frame_element"
 import { LinkInterceptor, LinkInterceptorDelegate } from "./link_interceptor"
-import { expandURL, getAction, locationIsVisitable } from "../url"
+import { expandURL, locationIsVisitable } from "../url"
 import { Session } from "../session"
 export class FrameRedirector implements LinkInterceptorDelegate, FormSubmitObserverDelegate {
   readonly session: Session
@@ -37,45 +38,48 @@ export class FrameRedirector implements LinkInterceptorDelegate, FormSubmitObser
     }
   }
 
-  willSubmitForm(element: HTMLFormElement, submitter?: HTMLElement) {
+  willSubmitForm(submission: HTMLFormSubmission) {
     return (
-      element.closest("turbo-frame") == null &&
-      this.shouldSubmit(element, submitter) &&
-      this.shouldRedirect(element, submitter)
+      submission.closest<FrameElement>("turbo-frame") == null &&
+      this.shouldSubmit(submission) &&
+      this.shouldRedirect(submission)
     )
   }
 
-  formSubmitted(element: HTMLFormElement, submitter?: HTMLElement) {
-    const frame = this.findFrameElement(element, submitter)
+  formSubmitted(submission: HTMLFormSubmission) {
+    const frame = this.findFrameElement(submission)
     if (frame) {
-      frame.delegate.formSubmitted(element, submitter)
+      frame.delegate.formSubmitted(submission)
     }
   }
 
-  private shouldSubmit(form: HTMLFormElement, submitter?: HTMLElement) {
-    const action = getAction(form, submitter)
+  private shouldSubmit(submission: HTMLFormSubmission) {
     const meta = this.element.ownerDocument.querySelector<HTMLMetaElement>(`meta[name="turbo-root"]`)
     const rootLocation = expandURL(meta?.content ?? "/")
 
-    return this.shouldRedirect(form, submitter) && locationIsVisitable(action, rootLocation)
+    return this.shouldRedirect(submission) && locationIsVisitable(submission.location, rootLocation)
   }
 
-  private shouldRedirect(element: Element, submitter?: HTMLElement) {
+  private shouldRedirect(elementOrSubmission: Element | HTMLFormSubmission) {
     const isNavigatable =
-      element instanceof HTMLFormElement
-        ? this.session.submissionIsNavigatable(element, submitter)
-        : this.session.elementIsNavigatable(element)
+      elementOrSubmission instanceof Element
+        ? this.session.elementIsNavigatable(elementOrSubmission)
+        : this.session.submissionIsNavigatable(elementOrSubmission)
 
     if (isNavigatable) {
-      const frame = this.findFrameElement(element, submitter)
-      return frame ? frame != element.closest("turbo-frame") : false
+      const frame = this.findFrameElement(elementOrSubmission)
+      return frame ? frame != elementOrSubmission.closest<FrameElement>("turbo-frame") : false
     } else {
       return false
     }
   }
 
-  private findFrameElement(element: Element, submitter?: HTMLElement) {
-    const id = submitter?.getAttribute("data-turbo-frame") || element.getAttribute("data-turbo-frame")
+  private findFrameElement(elementOrSubmission: Element | HTMLFormSubmission) {
+    const id =
+      elementOrSubmission instanceof Element
+        ? elementOrSubmission.getAttribute("data-turbo-frame")
+        : elementOrSubmission.frame
+
     if (id && id != "_top") {
       const frame = this.element.querySelector(`#${id}:not([disabled])`)
       if (frame instanceof FrameElement) {

@@ -18,9 +18,10 @@ import {
   getVisitAction,
 } from "../../util"
 import { FormSubmission, FormSubmissionDelegate } from "../drive/form_submission"
+import { HTMLFormSubmission } from "../drive/html_form_submission"
 import { Snapshot } from "../snapshot"
 import { ViewDelegate, ViewRenderOptions } from "../view"
-import { Locatable, getAction, expandURL, urlsAreEqual, locationIsVisitable } from "../url"
+import { Locatable, expandURL, urlsAreEqual, locationIsVisitable } from "../url"
 import { FormSubmitObserver, FormSubmitObserverDelegate } from "../../observers/form_submit_observer"
 import { FrameView } from "./frame_view"
 import { LinkInterceptor, LinkInterceptorDelegate } from "./link_interceptor"
@@ -187,7 +188,7 @@ export class FrameController
     return this.shouldInterceptNavigation(link)
   }
 
-  submittedFormLinkToLocation(link: Element, _location: URL, form: HTMLFormElement): void {
+  submittedFormLinkToLocation(link: Element, _location: URL, { form }: HTMLFormSubmission): void {
     const frame = this.findFrameElement(link)
     if (frame) form.setAttribute("data-turbo-frame", frame.id)
   }
@@ -204,16 +205,16 @@ export class FrameController
 
   // Form submit observer delegate
 
-  willSubmitForm(element: HTMLFormElement, submitter?: HTMLElement) {
-    return element.closest("turbo-frame") == this.element && this.shouldInterceptNavigation(element, submitter)
+  willSubmitForm(submission: HTMLFormSubmission) {
+    return submission.form.closest("turbo-frame") == this.element && this.shouldInterceptNavigation(submission)
   }
 
-  formSubmitted(element: HTMLFormElement, submitter?: HTMLElement) {
+  formSubmitted(submission: HTMLFormSubmission) {
     if (this.formSubmission) {
       this.formSubmission.stop()
     }
 
-    this.formSubmission = new FormSubmission(this, element, submitter)
+    this.formSubmission = new FormSubmission(this, submission)
     const { fetchRequest } = this.formSubmission
     this.prepareRequest(fetchRequest)
     this.formSubmission.start()
@@ -263,9 +264,9 @@ export class FrameController
   }
 
   formSubmissionSucceededWithResponse(formSubmission: FormSubmission, response: FetchResponse) {
-    const frame = this.findFrameElement(formSubmission.formElement, formSubmission.submitter)
+    const frame = this.findFrameElement(formSubmission)
 
-    frame.delegate.proposeVisitIfNavigatedWithAction(frame, formSubmission.formElement, formSubmission.submitter)
+    frame.delegate.proposeVisitIfNavigatedWithAction(frame, formSubmission)
     frame.delegate.loadResponse(response)
 
     if (!formSubmission.isSafe) {
@@ -366,18 +367,23 @@ export class FrameController
     })
   }
 
-  private navigateFrame(element: Element, url: string, submitter?: HTMLElement) {
-    const frame = this.findFrameElement(element, submitter)
+  private navigateFrame(element: Element, url: string) {
+    const frame = this.findFrameElement(element)
 
-    frame.delegate.proposeVisitIfNavigatedWithAction(frame, element, submitter)
+    frame.delegate.proposeVisitIfNavigatedWithAction(frame, element)
 
     this.withCurrentNavigationElement(element, () => {
       frame.src = url
     })
   }
 
-  proposeVisitIfNavigatedWithAction(frame: FrameElement, element: Element, submitter?: HTMLElement) {
-    this.action = getVisitAction(submitter, element, frame)
+  proposeVisitIfNavigatedWithAction(frame: FrameElement, elementOrSubmission: Element | FormSubmission) {
+    const elements: (Element | undefined)[] =
+      elementOrSubmission instanceof Element
+        ? [elementOrSubmission, frame]
+        : [elementOrSubmission.submitter, elementOrSubmission.formElement, frame]
+
+    this.action = getVisitAction(...elements)
 
     if (this.action) {
       const pageSnapshot = PageSnapshot.fromElement(frame).clone()
@@ -459,9 +465,13 @@ export class FrameController
     return session.visit(location, { response: { redirected, statusCode, responseHTML } })
   }
 
-  private findFrameElement(element: Element, submitter?: HTMLElement) {
-    const id = getAttribute("data-turbo-frame", submitter, element) || this.element.getAttribute("target")
-    return getFrameElementById(id) ?? this.element
+  private findFrameElement(elementOrSubmission: Element | FormSubmission) {
+    const id =
+      elementOrSubmission instanceof Element
+        ? getAttribute("data-turbo-frame", elementOrSubmission)
+        : elementOrSubmission.frame
+
+    return getFrameElementById(id || this.element.getAttribute("target")) ?? this.element
   }
 
   async extractForeignFrameElement(container: ParentNode): Promise<FrameElement | null> {
@@ -487,18 +497,25 @@ export class FrameController
     return null
   }
 
-  private formActionIsVisitable(form: HTMLFormElement, submitter?: HTMLElement) {
-    const action = getAction(form, submitter)
-
-    return locationIsVisitable(expandURL(action), this.rootLocation)
+  private formActionIsVisitable({ location }: HTMLFormSubmission) {
+    return locationIsVisitable(location, this.rootLocation)
   }
 
-  private shouldInterceptNavigation(element: Element, submitter?: HTMLElement) {
-    const id = getAttribute("data-turbo-frame", submitter, element) || this.element.getAttribute("target")
-
-    if (element instanceof HTMLFormElement && !this.formActionIsVisitable(element, submitter)) {
+  private shouldInterceptNavigation(elementOrSubmission: Element | HTMLFormSubmission) {
+    if (!(elementOrSubmission instanceof Element) && !this.formActionIsVisitable(elementOrSubmission)) {
       return false
     }
+
+    let element, submitter
+    if (elementOrSubmission instanceof Element) {
+      element = elementOrSubmission
+      submitter = undefined
+    } else {
+      element = elementOrSubmission.form
+      submitter = elementOrSubmission.submitter
+    }
+
+    const id = getAttribute("data-turbo-frame", submitter, element) || this.element.getAttribute("target")
 
     if (!this.enabled || id == "_top") {
       return false

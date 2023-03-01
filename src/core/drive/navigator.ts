@@ -1,5 +1,5 @@
 import { Action } from "../types"
-import { getVisitAction } from "../../util"
+import { HTMLFormSubmission } from "./html_form_submission"
 import { FetchResponse } from "../../http/fetch_response"
 import { FormSubmission } from "./form_submission"
 import { expandURL, getAnchor, getRequestURL, Locatable, locationIsVisitable } from "../url"
@@ -40,9 +40,9 @@ export class Navigator {
     this.currentVisit.start()
   }
 
-  submitForm(form: HTMLFormElement, submitter?: HTMLElement) {
+  submitForm(submission: HTMLFormSubmission) {
     this.stop()
-    this.formSubmission = new FormSubmission(this, form, submitter, true)
+    this.formSubmission = new FormSubmission(this, submission, true)
 
     this.formSubmission.start()
   }
@@ -163,7 +163,7 @@ export class Navigator {
     return this.history.restorationIdentifier
   }
 
-  getActionForFormSubmission({ submitter, formElement }: FormSubmission): Action {
-    return getVisitAction(submitter, formElement) || "advance"
+  getActionForFormSubmission({ visitAction }: FormSubmission): Action {
+    return visitAction || "advance"
   }
 }

@@ -1,6 +1,8 @@
+import { HTMLFormSubmission } from "../core/drive/html_form_submission"
+
 export interface FormSubmitObserverDelegate {
-  willSubmitForm(form: HTMLFormElement, submitter?: HTMLElement): boolean
-  formSubmitted(form: HTMLFormElement, submitter?: HTMLElement): void
+  willSubmitForm(submission: HTMLFormSubmission): boolean
+  formSubmitted(submission: HTMLFormSubmission): void
 }
 
 export class FormSubmitObserver {
@@ -34,33 +36,31 @@ export class FormSubmitObserver {
 
   submitBubbled = <EventListener>((event: SubmitEvent) => {
     if (!event.defaultPrevented) {
-      const form = event.target instanceof HTMLFormElement ? event.target : undefined
-      const submitter = event.submitter || undefined
+      const submission =
+        event.target instanceof HTMLFormElement
+          ? new HTMLFormSubmission(event.target, event.submitter || undefined)
+          : undefined
 
       if (
-        form &&
-        submissionDoesNotDismissDialog(form, submitter) &&
-        submissionDoesNotTargetIFrame(form, submitter) &&
-        this.delegate.willSubmitForm(form, submitter)
+        submission &&
+        submissionDoesNotDismissDialog(submission) &&
+        submissionDoesNotTargetIFrame(submission) &&
+        this.delegate.willSubmitForm(submission)
       ) {
         event.preventDefault()
         event.stopImmediatePropagation()
-        this.delegate.formSubmitted(form, submitter)
+        this.delegate.formSubmitted(submission)
       }
     }
   })
 }
 
-function submissionDoesNotDismissDialog(form: HTMLFormElement, submitter?: HTMLElement): boolean {
-  const method = submitter?.getAttribute("formmethod") || form.getAttribute("method")
-
+function submissionDoesNotDismissDialog({ method }: HTMLFormSubmission): boolean {
   return method != "dialog"
 }
 
-function submissionDoesNotTargetIFrame(form: HTMLFormElement, submitter?: HTMLElement): boolean {
-  if (submitter?.hasAttribute("formtarget") || form.hasAttribute("target")) {
-    const target = submitter?.getAttribute("formtarget") || form.target
-
+function submissionDoesNotTargetIFrame({ target }: HTMLFormSubmission): boolean {
+  if (target) {
     for (const element of document.getElementsByName(target)) {
       if (element instanceof HTMLIFrameElement) return false
     }

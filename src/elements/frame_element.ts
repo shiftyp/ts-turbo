@@ -2,6 +2,7 @@ import { FetchResponse } from "../http/fetch_response"
 import { Snapshot } from "../core/snapshot"
 import { LinkInterceptorDelegate } from "../core/frames/link_interceptor"
 import { FormSubmitObserverDelegate } from "../observers/form_submit_observer"
+import { FormSubmission } from "../core/drive/form_submission"
 
 export enum FrameLoadingStyle {
   eager = "eager",
@@ -19,7 +20,7 @@ export interface FrameElementDelegate extends LinkInterceptorDelegate, FormSubmi
   sourceURLReloaded(): Promise<void>
   disabledChanged(): void
   loadResponse(response: FetchResponse): void
-  proposeVisitIfNavigatedWithAction(frame: FrameElement, element: Element, submitter?: HTMLElement): void
+  proposeVisitIfNavigatedWithAction(frame: FrameElement, elementOrSubmission: Element | FormSubmission): void
   fetchResponseLoaded: (fetchResponse: FetchResponse) => void
   visitCachedSnapshot: (snapshot: Snapshot) => void
   isLoading: boolean

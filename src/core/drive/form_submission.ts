@@ -1,6 +1,7 @@
-import { FetchRequest, FetchMethod, fetchMethodFromString } from "../../http/fetch_request"
+import { Action } from "../types"
+import { FetchRequest, FetchMethod } from "../../http/fetch_request"
 import { FetchResponse } from "../../http/fetch_response"
-import { expandURL } from "../url"
+import { HTMLFormSubmission, FormEnctype } from "./html_form_submission"
 import { dispatch, getAttribute, getMetaContent, hasAttribute } from "../../util"
 import { StreamMessage } from "../streams/stream_message"
 
@@ -23,32 +24,22 @@ export enum FormSubmissionState {
   stopped,
 }
 
-enum FormEnctype {
-  urlEncoded = "application/x-www-form-urlencoded",
-  multipart = "multipart/form-data",
-  plain = "text/plain",
-}
-
 export type TurboSubmitStartEvent = CustomEvent<{ formSubmission: FormSubmission }>
 export type TurboSubmitEndEvent = CustomEvent<
   { formSubmission: FormSubmission } & { [K in keyof FormSubmissionResult]?: FormSubmissionResult[K] }
 >
 
-function formEnctypeFromString(encoding: string): FormEnctype {
-  switch (encoding.toLowerCase()) {
-    case FormEnctype.multipart:
-      return FormEnctype.multipart
-    case FormEnctype.plain:
-      return FormEnctype.plain
-    default:
-      return FormEnctype.urlEncoded
-  }
-}
-
 export class FormSubmission {
   readonly delegate: FormSubmissionDelegate
   readonly formElement: HTMLFormElement
   readonly submitter?: HTMLElement
+  readonly submission: HTMLFormSubmission
+  readonly method: FetchMethod
+  readonly action: string
+  readonly body: URLSearchParams | FormData
+  readonly enctype: FormEnctype
+  readonly visitAction: Action | null
+  readonly frame: string | null
   readonly formData: FormData
   readonly location: URL
   readonly fetchRequest: FetchRequest
@@ -72,42 +63,19 @@ export class FormSubmission {
     mustRedirect = false,
   ) {
     this.delegate = delegate
-    this.formElement = formElement
-    this.submitter = submitter
-    this.formData = buildFormData(formElement, submitter)
-    this.location = expandURL(this.action)
-    if (this.method == FetchMethod.get) {
-      mergeFormDataEntries(this.location, [...this.body.entries()])
-    }
+    this.submission = submission
+    this.formElement = submission.form
+    this.submitter = submission.submitter
+    this.formData = submission.formData
+    this.location = submission.location
+    this.method = submission.fetchMethod
+    this.action = submission.action
+    this.body = submission.body
+    this.enctype = submission.enctype
+    this.visitAction = submission.visitAction
+    this.frame = submission.frame
     this.fetchRequest = new FetchRequest(this, this.method, this.location, this.body, this.formElement)
     this.mustRedirect = mustRedirect
-  }
-
-  get method(): FetchMethod {
-    const method = this.submitter?.getAttribute("formmethod") || this.formElement.getAttribute("method") || ""
-    return fetchMethodFromString(method.toLowerCase()) || FetchMethod.get
-  }
-
-  get action(): string {
-    const formElementAction = typeof this.formElement.action === "string" ? this.formElement.action : null
-
-    if (this.submitter?.hasAttribute("formaction")) {
-      return this.submitter.getAttribute("formaction") || ""
-    } else {
-      return this.formElement.getAttribute("action") || formElementAction || ""
-    }
-  }
-
-  get body() {
-    if (this.enctype == FormEnctype.urlEncoded || this.method == FetchMethod.get) {
-      return new URLSearchParams(this.stringFormData)
-    } else {
-      return this.formData
-    }
-  }
-
-  get enctype(): FormEnctype {
-    return formEnctypeFromString(this.submitter?.getAttribute("formenctype") || this.formElement.enctype)
   }
 
   get isSafe() {
@@ -115,12 +83,9 @@ export class FormSubmission {
   }
 
   get stringFormData() {
-    return [...this.formData].reduce(
-      (entries, [name, value]) => {
-        return entries.concat(typeof value == "string" ? [[name, value]] : [])
-      },
-      [] as [string, string][],
-    )
+    return [...this.formData].reduce((entries, [name, value]) => {
+      return entries.concat(typeof value == "string" ? [[name, value]] : [])
+    }, [] as [string, string][])
   }
 
   // The submission process
@@ -254,18 +219,6 @@ export class FormSubmission {
   }
 }
 
-function buildFormData(formElement: HTMLFormElement, submitter?: HTMLElement): FormData {
-  const formData = new FormData(formElement)
-  const name = submitter?.getAttribute("name")
-  const value = submitter?.getAttribute("value")
-
-  if (name) {
-    formData.append(name, value || "")
-  }
-
-  return formData
-}
-
 function getCookieValue(cookieName: string | null) {
   if (cookieName != null) {
     const cookies = document.cookie ? document.cookie.split("; ") : []
@@ -279,18 +232,4 @@ function getCookieValue(cookieName: string | null) {
 
 function responseSucceededWithoutRedirect(response: FetchResponse) {
   return response.statusCode == 200 && !response.redirected
-}
-
-function mergeFormDataEntries(url: URL, entries: [string, FormDataEntryValue][]): URL {
-  const searchParams = new URLSearchParams()
-
-  for (const [name, value] of entries) {
-    if (value instanceof File) continue
-
-    searchParams.append(name, value)
-  }
-
-  url.search = searchParams.toString()
-
-  return url
 }

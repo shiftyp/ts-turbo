@@ -1,9 +1,10 @@
+import { HTMLFormSubmission } from "../core/drive/html_form_submission"
 import { LinkClickObserver, LinkClickObserverDelegate } from "./link_click_observer"
 import { getVisitAction } from "../util"
 
 export type FormLinkClickObserverDelegate = {
   willSubmitFormLinkToLocation(link: Element, location: URL, event: MouseEvent): boolean
-  submittedFormLinkToLocation(link: Element, location: URL, form: HTMLFormElement): void
+  submittedFormLinkToLocation(link: Element, location: URL, submission: HTMLFormSubmission): void
 }
 
 export class FormLinkClickObserver implements LinkClickObserverDelegate {
@@ -58,7 +59,7 @@ export class FormLinkClickObserver implements LinkClickObserverDelegate {
     const turboStream = link.hasAttribute("data-turbo-stream")
     if (turboStream) form.setAttribute("data-turbo-stream", "")
 
-    this.delegate.submittedFormLinkToLocation(link, location, form)
+    this.delegate.submittedFormLinkToLocation(link, location, new HTMLFormSubmission(form))
 
     document.body.appendChild(form)
     form.addEventListener("turbo:submit-end", () => form.remove(), { once: true })

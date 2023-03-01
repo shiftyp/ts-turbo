@@ -6,7 +6,7 @@ import { FrameRedirector } from "./frames/frame_redirector"
 import { History, HistoryDelegate } from "./drive/history"
 import { LinkClickObserver, LinkClickObserverDelegate } from "../observers/link_click_observer"
 import { FormLinkClickObserver, FormLinkClickObserverDelegate } from "../observers/form_link_click_observer"
-import { getAction, expandURL, locationIsVisitable, Locatable } from "./url"
+import { expandURL, locationIsVisitable, Locatable } from "./url"
 import { Navigator, NavigatorDelegate } from "./drive/navigator"
 import { PageObserver, PageObserverDelegate } from "../observers/page_observer"
 import { ScrollObserver } from "../observers/scroll_observer"
@@ -17,6 +17,7 @@ import { Action, Position, StreamSource } from "./types"
 import { clearBusyState, dispatch, findClosestRecursively, getVisitAction, markAsBusy } from "../util"
 import { PageView, PageViewDelegate, PageViewRenderOptions } from "./drive/page_view"
 import { Visit, VisitOptions } from "./drive/visit"
+import { HTMLFormSubmission } from "./drive/html_form_submission"
 import { PageSnapshot } from "./drive/page_snapshot"
 import { FrameElement } from "../elements/frame_element"
 import { FrameViewRenderOptions } from "./frames/frame_view"
@@ -236,17 +237,14 @@ export class Session
 
   // Form submit observer delegate
 
-  willSubmitForm(form: HTMLFormElement, submitter?: HTMLElement): boolean {
-    const action = getAction(form, submitter)
-
+  willSubmitForm(submission: HTMLFormSubmission): boolean {
     return (
-      this.submissionIsNavigatable(form, submitter) &&
-      locationIsVisitable(expandURL(action), this.snapshot.rootLocation)
+      this.submissionIsNavigatable(submission) && locationIsVisitable(submission.location, this.snapshot.rootLocation)
     )
   }
 
-  formSubmitted(form: HTMLFormElement, submitter?: HTMLElement) {
-    this.navigator.submitForm(form, submitter)
+  formSubmitted(submission: HTMLFormSubmission) {
+    this.navigator.submitForm(submission)
   }
 
   // Page observer delegate
@@ -390,7 +388,7 @@ export class Session
 
   // Helpers
 
-  submissionIsNavigatable(form: HTMLFormElement, submitter?: HTMLElement): boolean {
+  submissionIsNavigatable({ form, submitter }: HTMLFormSubmission): boolean {
     if (this.formMode == "off") {
       return false
     } else {

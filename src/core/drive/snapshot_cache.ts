@@ -1,58 +1,37 @@
-import { toCacheKey } from "../url"
 import { PageSnapshot } from "./page_snapshot"
+import { CacheStore } from "./cache_store"
+import { DiskStore } from "./cache_stores/disk_store"
+import { MemoryStore } from "./cache_stores/memory_store"
 
 export class SnapshotCache {
-  readonly keys: string[] = []
-  readonly size: number
-  snapshots: { [url: string]: PageSnapshot } = {}
+  static currentStore: CacheStore = new MemoryStore(10)
 
-  constructor(size: number) {
-    this.size = size
+  static setStore(storeName: string) {
+    switch (storeName) {
+      case "memory":
+        SnapshotCache.currentStore = new MemoryStore(10)
+        break
+      case "disk":
+        SnapshotCache.currentStore = new DiskStore()
+        break
+      default:
+        throw new Error(`Invalid store name: ${storeName}`)
+    }
   }
 
   has(location: URL) {
-    return toCacheKey(location) in this.snapshots
+    return SnapshotCache.currentStore.has(location)
   }
 
-  get(location: URL): PageSnapshot | undefined {
-    if (this.has(location)) {
-      const snapshot = this.read(location)
-      this.touch(location)
-      return snapshot
-    }
+  get(location: URL) {
+    return SnapshotCache.currentStore.get(location)
   }
 
   put(location: URL, snapshot: PageSnapshot) {
-    this.write(location, snapshot)
-    this.touch(location)
-    return snapshot
+    return SnapshotCache.currentStore.put(location, snapshot)
   }
 
   clear() {
-    this.snapshots = {}
-  }
-
-  // Private
-
-  read(location: URL) {
-    return this.snapshots[toCacheKey(location)]
-  }
-
-  write(location: URL, snapshot: PageSnapshot) {
-    this.snapshots[toCacheKey(location)] = snapshot
-  }
-
-  touch(location: URL) {
-    const key = toCacheKey(location)
-    const index = this.keys.indexOf(key)
-    if (index > -1) this.keys.splice(index, 1)
-    this.keys.unshift(key)
-    this.trim()
-  }
-
-  trim() {
-    for (const key of this.keys.splice(this.size)) {
-      delete this.snapshots[key]
-    }
+    return SnapshotCache.currentStore.clear()
   }
 }

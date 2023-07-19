@@ -37,9 +37,7 @@ export class Preloader {
   async preloadURL(link: HTMLAnchorElement) {
     const location = new URL(link.href)
 
-    if (this.snapshotCache.has(location)) {
-      return
-    }
+    if (await this.snapshotCache.has(location)) return
 
     try {
       const response = await fetch(location.toString(), { headers: { "VND.PREFETCH": "true", Accept: "text/html" } })

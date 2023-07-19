@@ -276,8 +276,8 @@ export class Visit implements FetchRequestDelegate {
     }
   }
 
-  getCachedSnapshot() {
-    const snapshot = this.view.getCachedSnapshotForLocation(this.location) || this.getPreloadedSnapshot()
+  async getCachedSnapshot() {
+    const snapshot = (await this.view.getCachedSnapshotForLocation(this.location)) || this.getPreloadedSnapshot()
 
     if (snapshot && (!getAnchor(this.location) || snapshot.hasAnchor(getAnchor(this.location)))) {
       if (this.action == "restore" || snapshot.isPreviewable) {
@@ -296,8 +296,8 @@ export class Visit implements FetchRequestDelegate {
     return this.getCachedSnapshot() != null
   }
 
-  loadCachedSnapshot() {
-    const snapshot = this.getCachedSnapshot()
+  async loadCachedSnapshot() {
+    const snapshot = await this.getCachedSnapshot()
     if (snapshot) {
       const isPreview = this.shouldIssueRequest()
       this.render(async () => {

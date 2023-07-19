@@ -15,7 +15,7 @@ export interface PageViewDelegate extends ViewDelegate<HTMLBodyElement, PageSnap
 type PageViewRenderer = PageRenderer | ErrorRenderer
 
 export class PageView extends View<HTMLBodyElement, PageSnapshot, PageViewRenderer, PageViewDelegate> {
-  readonly snapshotCache = new SnapshotCache(10)
+  readonly snapshotCache = new SnapshotCache()
   lastRenderedLocation = new URL(location.href)
   forceReloaded = false
 
@@ -39,6 +39,10 @@ export class PageView extends View<HTMLBodyElement, PageSnapshot, PageViewRender
     visit?.changeHistory()
     const renderer = new ErrorRenderer(this.snapshot, snapshot, ErrorRenderer.renderElement, false)
     return this.render(renderer)
+  }
+
+  setCacheStore(cacheName: string) {
+    SnapshotCache.setStore(cacheName)
   }
 
   clearSnapshotCache() {

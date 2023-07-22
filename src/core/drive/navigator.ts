@@ -1,9 +1,6 @@
 import { Action } from "../types"
 import { getVisitAction } from "../../util"
-<<<<<<< HEAD
-=======
 import { FetchMethod } from "../../http/fetch_request"
->>>>>>> e5e188f... `reuseExistingServer` in `CI`
 import { FetchResponse } from "../../http/fetch_response"
 import { FormSubmission } from "./form_submission"
 import { expandURL, getAnchor, getRequestURL, Locatable, locationIsVisitable } from "../url"
@@ -88,6 +85,7 @@ export class Navigator {
     if (formSubmission == this.formSubmission) {
       const responseHTML = await fetchResponse.responseHTML
       if (responseHTML) {
+        const shouldCacheSnapshot = formSubmission.isSafe
         const shouldCacheSnapshot = formSubmission.isSafe
         if (!shouldCacheSnapshot) {
           this.view.clearSnapshotCache()

@@ -20,7 +20,6 @@ export class CacheObserver {
     }
   }
 
-<<<<<<< HEAD
   removeTemporaryElements = <EventListener>((_event: TurboBeforeCacheEvent) => {
     for (const element of this.temporaryElements) {
       element.remove()
@@ -41,13 +40,5 @@ export class CacheObserver {
     }
 
     return [...elements]
-=======
-  removeStaleElements = (_event: TurboBeforeCacheEvent) => {
-    const staleElements = [...document.querySelectorAll('[data-turbo-cache="false"]')]
-
-    for (const element of staleElements) {
-      element.remove()
-    }
->>>>>>> b47ac72... Reorganize Turbo Events and declare events on `WindowEventMap`
   }
 }

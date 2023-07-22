@@ -166,14 +166,8 @@ test("successfully following a link to a page without a matching frame dispatche
   page,
 }) => {
   await page.click("#missing-frame-link")
+  await nextEventOnTarget(page, "missing", "turbo:before-fetch-request")
   const { response } = await nextEventOnTarget(page, "missing", "turbo:frame-missing")
-<<<<<<< HEAD
-=======
-
-  assert.ok(await noNextEventNamed(page, "turbo:before-fetch-request"))
-
-  await nextEventNamed(page, "turbo:load")
->>>>>>> e5e188f... `reuseExistingServer` in `CI`
 
   assert.equal(200, response.status)
 })
@@ -208,12 +202,6 @@ test("failing to follow a link to a page without a matching frame dispatches a t
   const { response } = await nextEventOnTarget(page, "missing", "turbo:frame-missing")
 <<<<<<< HEAD
 =======
-
-  assert.ok(await noNextEventNamed(page, "turbo:before-fetch-request"))
-  assert.ok(await noNextEventNamed(page, "turbo:load"))
-
-  await nextEventNamed(page, "turbo:render")
->>>>>>> e5e188f... `reuseExistingServer` in `CI`
 
   assert.equal(404, response.status)
 })

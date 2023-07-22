@@ -1,9 +1,6 @@
 import { test } from "@playwright/test"
 import { assert } from "chai"
-<<<<<<< HEAD
 import { nextBeat, nextEventNamed, readEventLogs, waitUntilNoSelector, waitUntilText } from "../helpers/page"
-=======
-import { nextBeat, nextEventNamed, readEventLogs } from "../helpers/page"
 import { TurboBeforeStreamRenderEvent } from "../../events"
 >>>>>>> b47ac72... Reorganize Turbo Events and declare events on `WindowEventMap`
 

@@ -176,12 +176,12 @@ export class StreamElement extends HTMLElement {
   }
 
   private get targetElementsByQuery() {
-    const elements = this.ownerDocument?.querySelectorAll(this.targets!)
-
-    if (elements.length !== 0) {
-      return Array.prototype.slice.call(elements)
-    } else {
-      return []
+    let elements = [...this.ownerDocument?.querySelectorAll(this.targets!)];
+    
+    for (const template of this.ownerDocument?.querySelectorAll("template")) {
+      elements.push(...template.content.querySelectorAll(this.targets!))
     }
+
+    return elements
   }
 }

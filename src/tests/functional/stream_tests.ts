@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
   await readEventLogs(page)
 })
 
-test("test receiving a stream message", async ({ page }) => {
+test("test receiving a stream message for single target", async ({ page }) => {
   const messages = await page.locator("#messages .message")
 
   assert.deepEqual(await messages.allTextContents(), ["First"])
@@ -16,6 +16,26 @@ test("test receiving a stream message", async ({ page }) => {
   await nextBeat()
 
   assert.deepEqual(await messages.allTextContents(), ["First", "Hello world!"])
+})
+
+test("test receiving a stream message for single target in a template", async ({ page }) => {
+  const templateNode = await page.locator("#messages_template")
+  const fetchMessagesInTemplateNode = (node : HTMLTemplateElement) => {
+    const messagesNode : HTMLElement = node.content.querySelector("#messages")!
+    return messagesNode.innerText.trim().split(/\s{2,}/g);
+
+  }
+
+  let messagesInTemplate = await templateNode.evaluate(fetchMessagesInTemplateNode)
+
+  assert.deepEqual(messagesInTemplate, ["Message inside template"])
+
+  await page.click("#append-target button")
+  await nextBeat()
+
+  messagesInTemplate = await templateNode.evaluate(fetchMessagesInTemplateNode)
+
+  assert.deepEqual(messagesInTemplate, ["Message inside template", "Hello world!"])
 })
 
 test("test dispatches a turbo:before-stream-render event", async ({ page }) => {

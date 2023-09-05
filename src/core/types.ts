@@ -2,7 +2,7 @@ export type Action = "advance" | "replace" | "restore"
 
 export type Position = { x: number; y: number }
 
-export type StreamSource = {
+export type StreamSource = (EventSource | WebSocket) & {
   addEventListener(
     type: "message",
     listener: (event: MessageEvent) => void,

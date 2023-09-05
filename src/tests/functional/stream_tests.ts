@@ -1,6 +1,7 @@
-import { test } from "@playwright/test"
+import { Page, test } from "@playwright/test"
 import { assert } from "chai"
 import { nextBeat, nextEventNamed, readEventLogs, waitUntilNoSelector, waitUntilText } from "../helpers/page"
+import { StreamSourceElement } from "../../elements/stream_source_element"
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/src/tests/fixtures/stream.html")
@@ -104,6 +105,9 @@ test("test receiving a stream message over SSE", async ({ page }) => {
       `<turbo-stream-source id="stream-source" src="/__turbo/messages"></turbo-stream-source>`
     )
   })
+  await nextBeat()
+  assert.equal(await getReadyState(page, "stream-source"), await page.evaluate(() => EventSource.OPEN))
+
   const messages = await page.locator("#messages .message")
 
   assert.deepEqual(await messages.allTextContents(), ["First"])
@@ -113,11 +117,33 @@ test("test receiving a stream message over SSE", async ({ page }) => {
   await waitUntilText(page, "Hello world!")
   assert.deepEqual(await messages.allTextContents(), ["First", "Hello world!"])
 
-  await page.evaluate(() => document.getElementById("stream-source")?.remove())
-  await nextBeat()
+  const readyState = await page.evaluate((id) => {
+    const element = document.getElementById(id) as StreamSourceElement
+
+    if (element && element.streamSource) {
+      element.remove()
+
+      return element.streamSource.readyState
+    } else {
+      return -1
+    }
+  }, "stream-source")
+  assert.equal(readyState, await page.evaluate(() => EventSource.CLOSED))
 
   await page.click("#async button")
   await nextBeat()
 
   assert.deepEqual(await messages.allTextContents(), ["First", "Hello world!"])
 })
+
+async function getReadyState(page: Page, id: string): Promise<number> {
+  return page.evaluate((id) => {
+    const element = document.getElementById(id) as StreamSourceElement
+
+    if (element?.streamSource) {
+      return element.streamSource.readyState
+    } else {
+      return -1
+    }
+  }, id)
+}

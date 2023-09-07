@@ -2,11 +2,21 @@ import { PageSnapshot } from "./page_snapshot"
 import { Renderer } from "../renderer"
 import { activateScriptElement } from "../../util"
 
-export class ErrorRenderer extends Renderer<HTMLBodyElement, PageSnapshot> {
-  static renderElement(currentElement: HTMLBodyElement, newElement: HTMLBodyElement) {
-    const { documentElement, body } = document
+const SELECTORS = {
+  SCRIPT_ELEMENTS: "script"
+}
 
-    documentElement.replaceChild(newElement, body)
+export class ErrorRenderer extends Renderer<HTMLBodyElement, PageSnapshot> {
+
+  // Not in upstream
+  private document: Document
+
+  constructor(newElement: HTMLBodyElement, currentElement: HTMLBodyElement, document: Document, newSnapshot: PageSnapshot) {
+    super()
+    this.newElement = newElement
+    this.currentElement = currentElement
+    this.document = document
+    this.newSnapshot = newSnapshot
   }
 
   async render() {
@@ -15,26 +25,31 @@ export class ErrorRenderer extends Renderer<HTMLBodyElement, PageSnapshot> {
   }
 
   replaceHeadAndBody() {
-    const { documentElement, head } = document
+    const { documentElement, head } = this.document
     documentElement.replaceChild(this.newHead, head)
+    this.replaceBody()
+  }
+
+  replaceBody() {
     this.renderElement(this.currentElement, this.newElement)
   }
 
   activateScriptElements() {
-    for (const replaceableElement of this.scriptElements) {
+    const scriptElements = this.getScriptElements()
+    scriptElements.forEach((replaceableElement: Element) => {
       const parentNode = replaceableElement.parentNode
       if (parentNode) {
-        const element = activateScriptElement(replaceableElement)
+        const element = activateScriptElement(replaceableElement as HTMLScriptElement)
         parentNode.replaceChild(element, replaceableElement)
       }
-    }
+    })
   }
 
   get newHead() {
     return this.newSnapshot.headSnapshot.element
   }
 
-  get scriptElements() {
-    return document.documentElement.querySelectorAll("script")
+  getScriptElements() {
+    return this.document.documentElement.querySelectorAll(SELECTORS.SCRIPT_ELEMENTS)
   }
 }

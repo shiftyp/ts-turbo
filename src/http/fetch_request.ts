@@ -3,22 +3,6 @@ import { FrameElement } from "../elements/frame_element"
 import { TurboBeforeFetchRequestEvent, TurboBeforeFetchResponseEvent, TurboFetchRequestErrorEvent } from "../events"
 import { dispatch } from "../util"
 
-<<<<<<< HEAD
-export type TurboBeforeFetchRequestEvent = CustomEvent<{
-  fetchOptions: RequestInit
-  url: URL
-  resume: (value?: any) => void
-}>
-export type TurboBeforeFetchResponseEvent = CustomEvent<{
-  fetchResponse: FetchResponse
-}>
-export type TurboFetchRequestErrorEvent = CustomEvent<{
-  request: FetchRequest
-  error: Error
-}>
-
-=======
->>>>>>> b47ac72... Reorganize Turbo Events and declare events on `WindowEventMap`
 export interface FetchRequestDelegate {
   referrer?: URL
 

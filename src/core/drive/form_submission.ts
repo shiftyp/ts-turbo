@@ -52,7 +52,6 @@ export class FormSubmission {
   state = FormSubmissionState.initialized
   result?: FormSubmissionResult
   originalSubmitText?: string
-  originalSubmitText?: string
 
   static confirmMethod(
     message: string,
@@ -151,7 +150,7 @@ export class FormSubmission {
   // Fetch request delegate
 
   prepareRequest(request: FetchRequest) {
-    if (!request.isIdempotent) {
+    if (!request.isSafe) {
       const token = getCookieValue(getMetaContent("csrf-param")) || getMetaContent("csrf-token")
       if (token) {
         request.headers["X-CSRF-Token"] = token
@@ -240,32 +239,7 @@ export class FormSubmission {
     }
   }
 
-  setSubmitsWith() {
-    if (!this.submitter || !this.submitsWith) return
-
-    if (this.submitter.matches("button")) {
-      this.originalSubmitText = this.submitter.innerHTML
-      this.submitter.innerHTML = this.submitsWith
-    } else if (this.submitter.matches("input")) {
-      const input = this.submitter as HTMLInputElement
-      this.originalSubmitText = input.value
-      input.value = this.submitsWith
-    }
-  }
-
-  resetSubmitterText() {
-    if (!this.submitter || !this.originalSubmitText) return
-
-    if (this.submitter.matches("button")) {
-      this.submitter.innerHTML = this.originalSubmitText
-    } else if (this.submitter.matches("input")) {
-      const input = this.submitter as HTMLInputElement
-      input.value = this.originalSubmitText
-    }
-  }
-
   requestMustRedirect(request: FetchRequest) {
-    return !request.isSafe && this.mustRedirect
     return !request.isSafe && this.mustRedirect
   }
 
@@ -275,12 +249,8 @@ export class FormSubmission {
 
   get submitsWith() {
     return this.submitter?.getAttribute("data-turbo-submits-with")
-    return !request.isSafe || hasAttribute("data-turbo-stream", this.submitter, this.formElement)
   }
 
-  get submitsWith() {
-    return this.submitter?.getAttribute("data-turbo-submits-with")
-  }
 }
 
 function buildFormData(formElement: HTMLFormElement, submitter?: HTMLElement): FormData {
@@ -308,7 +278,9 @@ function getCookieValue(cookieName: string | null) {
 
 function responseSucceededWithoutRedirect(response: FetchResponse) {
   return response.statusCode == 200 && !response.redirected
+
 }
+
 
 function mergeFormDataEntries(url: URL, entries: [string, FormDataEntryValue][]): URL {
   const searchParams = new URLSearchParams()

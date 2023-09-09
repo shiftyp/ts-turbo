@@ -2,7 +2,6 @@ import { test } from "@playwright/test"
 import { assert } from "chai"
 import { nextBeat, nextEventNamed, readEventLogs, waitUntilNoSelector, waitUntilText } from "../helpers/page"
 import { TurboBeforeStreamRenderEvent } from "../../events"
->>>>>>> b47ac72... Reorganize Turbo Events and declare events on `WindowEventMap`
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/src/tests/fixtures/stream.html")

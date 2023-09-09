@@ -14,18 +14,6 @@ const session = new Session()
 const cache = new Cache(session)
 const { navigator } = session
 export { navigator, session, cache, PageRenderer, PageSnapshot, FrameRenderer }
-export type {
-  TurboBeforeCacheEvent,
-  TurboBeforeRenderEvent,
-  TurboBeforeVisitEvent,
-  TurboClickEvent,
-  TurboBeforeFrameRenderEvent,
-  TurboFrameLoadEvent,
-  TurboFrameRenderEvent,
-  TurboLoadEvent,
-  TurboRenderEvent,
-  TurboVisitEvent,
-} from "./session"
 
 export { StreamActions } from "./streams/stream_actions"
 export type { TurboStreamAction, TurboStreamActions } from "./streams/stream_actions"

@@ -13,24 +13,10 @@ import { ScrollObserver } from "../observers/scroll_observer"
 import { StreamMessage } from "./streams/stream_message"
 import { StreamMessageRenderer } from "./streams/stream_message_renderer"
 import { StreamObserver } from "../observers/stream_observer"
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { Action, Position, StreamSource } from "./types"
-import { clearBusyState, dispatch, findClosestRecursively, getVisitAction, markAsBusy } from "../util"
-=======
-import { Action, Position, StreamSource, TimingData, isAction } from "./types"
-import { clearBusyState, dispatch, markAsBusy } from "../util"
->>>>>>> b47ac72... Reorganize Turbo Events and declare events on `WindowEventMap`
-=======
 import { Action, Position, StreamSource, TimingData } from "./types"
 import { clearBusyState, dispatch, findClosestRecursively, getVisitAction, markAsBusy } from "../util"
->>>>>>> e5e188f... `reuseExistingServer` in `CI`
 import { PageView, PageViewDelegate, PageViewRenderOptions } from "./drive/page_view"
-import { Visit, VisitOptions } from "./drive/visit"
-import { PageSnapshot } from "./drive/page_snapshot"
-import { FrameElement } from "../elements/frame_element"
-import { FetchResponse } from "../http/fetch_response"
-import { Preloader, PreloaderDelegate } from "./drive/preloader"
+
 import {
   TurboBeforeCacheEvent,
   TurboBeforeRenderEvent,
@@ -42,25 +28,6 @@ import {
   TurboRenderEvent,
   TurboVisitEvent,
 } from "../events"
-
-export type FormMode = "on" | "off" | "optin"
-<<<<<<< HEAD
-export type TimingData = unknown
-export type TurboBeforeCacheEvent = CustomEvent
-export type TurboBeforeRenderEvent = CustomEvent<
-  { newBody: HTMLBodyElement; isPreview: boolean } & PageViewRenderOptions
->
-export type TurboBeforeVisitEvent = CustomEvent<{ url: string }>
-export type TurboClickEvent = CustomEvent<{ url: string; originalEvent: MouseEvent }>
-export type TurboFrameLoadEvent = CustomEvent
-export type TurboBeforeFrameRenderEvent = CustomEvent<{ newFrame: FrameElement } & FrameViewRenderOptions>
-export type TurboFrameRenderEvent = CustomEvent<{ fetchResponse: FetchResponse }>
-export type TurboLoadEvent = CustomEvent<{ url: string; timing: TimingData }>
-export type TurboRenderEvent = CustomEvent<{ isPreview: boolean }>
-export type TurboVisitEvent = CustomEvent<{ url: string; action: Action }>
-=======
->>>>>>> b47ac72... Reorganize Turbo Events and declare events on `WindowEventMap`
-
 export class Session
   implements
     FormSubmitObserverDelegate,

@@ -19,26 +19,9 @@ import {
   searchParams,
 } from "../helpers/page"
 
-<<<<<<< HEAD
-declare global {
-  namespace Chai {
-    interface AssertStatic {
-      equalIgnoringWhitespace(actual: string | null | undefined, expected: string, message?: string): void
-    }
-  }
-}
-=======
 import { FrameElement } from "../../elements"
 import { TurboFrameMissingEvent } from "../../events"
 
-<<<<<<< HEAD
-assert.equal = function (actual: any, expected: any, message?: string) {
-  actual = typeof actual == "string" ? actual.trim() : actual
-  expected = typeof expected == "string" ? expected.trim() : expected
-
-  const assertExpectation = new Assertion(expected)
->>>>>>> b47ac72... Reorganize Turbo Events and declare events on `WindowEventMap`
-=======
 declare global {
   namespace Chai {
     interface AssertStatic {
@@ -46,7 +29,6 @@ declare global {
     }
   }
 }
->>>>>>> 5a18117... Merge branch 'main' into reorganize-events
 
 assert.equalIgnoringWhitespace = function (actual: string | null | undefined, expected: string, message?: string) {
   new Assertion(actual?.trim()).to.equal(expected.trim(), message)
@@ -200,8 +182,6 @@ test("failing to follow a link to a page without a matching frame dispatches a t
 }) => {
   await page.click("#missing-page-link")
   const { response } = await nextEventOnTarget(page, "missing", "turbo:frame-missing")
-<<<<<<< HEAD
-=======
 
   assert.equal(404, response.status)
 })
@@ -916,6 +896,39 @@ test("form submissions from frames clear snapshot cache", async ({ page }) => {
 
   await expect(page.locator("h1")).not.toHaveText("Changed")
 })
+
+async function withoutChangingEventListenersCount(page: Page, callback: () => Promise<void>) {
+  const name = "eventListenersAttachedToDocument"
+  const setup = () => {
+    return page.evaluate((name) => {
+      const context = window as any
+      context[name] = 0
+      context.originals = {
+        addEventListener: document.addEventListener,
+        removeEventListener: document.removeEventListener,
+      }
+
+      document.addEventListener = (
+        type: string,
+        listener: EventListenerOrEventListenerObject,
+        options?: boolean | AddEventListenerOptions
+      ) => {
+        context.originals.addEventListener.call(document, type, listener, options)
+        context[name] += 1
+      }
+
+      document.removeEventListener = (
+        type: string,
+        listener: EventListenerOrEventListenerObject,
+        options?: boolean | AddEventListenerOptions
+      ) => {
+        context.originals.removeEventListener.call(document, type, listener, options)
+        context[name] -= 1
+      }
+
+      return context[name] || 0
+    }, name)
+  }
 
 async function withoutChangingEventListenersCount(page: Page, callback: () => Promise<void>) {
   const name = "eventListenersAttachedToDocument"

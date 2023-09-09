@@ -116,7 +116,6 @@ export class PageRenderer extends Renderer<HTMLBodyElement, PageSnapshot> {
   }
 
   async mergeNonScriptElements() {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { script, ...otherElements } = this.currentSnapshot.headSnapshot.elements
     for (const localName of Object.keys(otherElements)) {
       this.mergeElements(localName)

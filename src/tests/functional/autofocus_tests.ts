@@ -10,11 +10,11 @@ test("test autofocus first autofocus element on load", async ({ page }) => {
   await nextBeat()
   assert.ok(
     await hasSelector(page, "#first-autofocus-element:focus"),
-    "focuses the first [autofocus] element on the page"
+    "focuses the first [autofocus] element on the page",
   )
   assert.notOk(
     await hasSelector(page, "#second-autofocus-element:focus"),
-    "focuses the first [autofocus] element on the page"
+    "focuses the first [autofocus] element on the page",
   )
 })
 
@@ -25,11 +25,11 @@ test("test autofocus first [autofocus] element on visit", async ({ page }) => {
 
   assert.ok(
     await hasSelector(page, "#first-autofocus-element:focus"),
-    "focuses the first [autofocus] element on the page"
+    "focuses the first [autofocus] element on the page",
   )
   assert.notOk(
     await hasSelector(page, "#second-autofocus-element:focus"),
-    "focuses the first [autofocus] element on the page"
+    "focuses the first [autofocus] element on the page",
   )
 })
 
@@ -39,11 +39,11 @@ test("test navigating a frame with a descendant link autofocuses [autofocus]:fir
 
   assert.ok(
     await hasSelector(page, "#frames-form-first-autofocus-element:focus"),
-    "focuses the first [autofocus] element in frame"
+    "focuses the first [autofocus] element in frame",
   )
   assert.notOk(
     await hasSelector(page, "#frames-form-second-autofocus-element:focus"),
-    "focuses the first [autofocus] element in frame"
+    "focuses the first [autofocus] element in frame",
   )
 })
 
@@ -53,27 +53,27 @@ test("test autofocus visible [autofocus] element on visit with inert elements", 
 
   assert.notOk(
     await hasSelector(page, "#dialog-autofocus-element:focus"),
-    "autofocus element is ignored in a closed dialog"
+    "autofocus element is ignored in a closed dialog",
   )
   assert.notOk(
     await hasSelector(page, "#details-autofocus-element:focus"),
-    "autofocus element is ignored in a closed details"
+    "autofocus element is ignored in a closed details",
   )
   assert.notOk(
     await hasSelector(page, "#hidden-autofocus-element:focus"),
-    "autofocus element is ignored in a hidden div"
+    "autofocus element is ignored in a hidden div",
   )
   assert.notOk(
     await hasSelector(page, "#inert-autofocus-element:focus"),
-    "autofocus element is ignored in an inert div"
+    "autofocus element is ignored in an inert div",
   )
   assert.notOk(
     await hasSelector(page, "#disabled-autofocus-element:focus"),
-    "autofocus element is ignored when disabled"
+    "autofocus element is ignored when disabled",
   )
   assert.ok(
     await hasSelector(page, "#visible-autofocus-element:focus"),
-    "focuses the visible [autofocus] element on the page"
+    "focuses the visible [autofocus] element on the page",
   )
 })
 
@@ -85,11 +85,11 @@ test("test navigating a frame with a link targeting the frame autofocuses [autof
 
   assert.ok(
     await hasSelector(page, "#frames-form-first-autofocus-element:focus"),
-    "focuses the first [autofocus] element in frame"
+    "focuses the first [autofocus] element in frame",
   )
   assert.notOk(
     await hasSelector(page, "#frames-form-second-autofocus-element:focus"),
-    "focuses the first [autofocus] element in frame"
+    "focuses the first [autofocus] element in frame",
   )
 })
 
@@ -101,10 +101,10 @@ test("test navigating a frame with a turbo-frame targeting the frame autofocuses
 
   assert.ok(
     await hasSelector(page, "#frames-form-first-autofocus-element:focus"),
-    "focuses the first [autofocus] element in frame"
+    "focuses the first [autofocus] element in frame",
   )
   assert.notOk(
     await hasSelector(page, "#frames-form-second-autofocus-element:focus"),
-    "focuses the first [autofocus] element in frame"
+    "focuses the first [autofocus] element in frame",
   )
 })

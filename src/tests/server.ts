@@ -23,7 +23,7 @@ router.post("/redirect", (request, response) => {
   const { path, sleep, ...query } = request.body
   const { pathname, query: searchParams } = url.parse(
     path ?? request.query.path ?? "/src/tests/fixtures/one.html",
-    true
+    true,
   )
   const enctype = request.get("Content-Type")
   if (enctype) {
@@ -31,7 +31,7 @@ router.post("/redirect", (request, response) => {
   }
   setTimeout(
     () => response.redirect(303, url.format({ pathname, query: { ...query, ...searchParams } })),
-    parseInt(sleep || "0", 10)
+    parseInt(sleep || "0", 10),
   )
 })
 

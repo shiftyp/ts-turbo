@@ -65,8 +65,8 @@ test("test reloads when tracked elements change", async ({ page }) => {
       (e: any) => {
         localStorage.setItem("reloadReason", e.detail.reason)
       },
-      { once: true }
-    )
+      { once: true },
+    ),
   )
 
   await page.click("#tracked-asset-change-link")
@@ -89,7 +89,7 @@ test("test reloads when tracked elements change due to failed form submission", 
       (e: any) => {
         localStorage.setItem("reason", e.detail.reason)
       },
-      { once: true }
+      { once: true },
     )
 
     window.addEventListener(
@@ -97,7 +97,7 @@ test("test reloads when tracked elements change due to failed form submission", 
       () => {
         localStorage.setItem("unloaded", "true")
       },
-      { once: true }
+      { once: true },
     )
   })
 
@@ -122,7 +122,7 @@ test("test before-render event supports custom render function", async ({ page }
         newElement.insertAdjacentHTML("beforeend", `<span id="custom-rendered">Custom Rendered</span>`)
         render(currentElement, newElement)
       }
-    })
+    }),
   )
   await page.click("#same-origin-link")
   await nextBody(page)
@@ -176,8 +176,8 @@ test("test reloads when turbo-visit-control setting is reload", async ({ page })
       (e: any) => {
         localStorage.setItem("reloadReason", e.detail.reason)
       },
-      { once: true }
-    )
+      { once: true },
+    ),
   )
 
   await page.click("#visit-control-reload-link")
@@ -201,7 +201,7 @@ test("test maintains scroll position before visit when turbo-visit-control setti
       addEventListener("scroll", () => {
         localStorage.setItem("scrolls", "true")
       })
-    })
+    }),
   )
 
   page.click("#below-the-fold-visit-control-reload-link")
@@ -414,7 +414,7 @@ test("test before-frame-render event supports custom render function within turb
         newElement.insertAdjacentHTML("beforeend", `<span id="custom-rendered">Custom Rendered Frame</span>`)
         render(currentElement, newElement)
       }
-    })
+    }),
   )
 
   await page.click("#permanent-in-frame-element-link")
@@ -594,11 +594,11 @@ test("test rendering a redirect response replaces the body once and only once", 
 function deepElementsEqual(
   page: Page,
   left: JSHandle<SVGElement | HTMLElement>[],
-  right: JSHandle<SVGElement | HTMLElement>[]
+  right: JSHandle<SVGElement | HTMLElement>[],
 ): Promise<boolean> {
   return page.evaluate(
     ([left, right]) => left.length == right.length && left.every((element) => right.includes(element)),
-    [left, right]
+    [left, right],
   )
 }
 
@@ -612,13 +612,13 @@ function bodyScriptEvaluationCount(page: Page): Promise<number | undefined> {
 
 function isStylesheetEvaluated(page: Page): Promise<boolean> {
   return page.evaluate(
-    () => getComputedStyle(document.body).getPropertyValue("--black-if-evaluated").trim() === "black"
+    () => getComputedStyle(document.body).getPropertyValue("--black-if-evaluated").trim() === "black",
   )
 }
 
 function isNoscriptStylesheetEvaluated(page: Page): Promise<boolean> {
   return page.evaluate(
-    () => getComputedStyle(document.body).getPropertyValue("--black-if-noscript-evaluated").trim() === "black"
+    () => getComputedStyle(document.body).getPropertyValue("--black-if-noscript-evaluated").trim() === "black",
   )
 }
 

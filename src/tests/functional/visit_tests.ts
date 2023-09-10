@@ -79,7 +79,7 @@ test("test canceling a before-visit event prevents navigation", async ({ page })
     await willChangeBody(page, async () => {
       await page.click("#same-origin-link")
       await nextBeat()
-    })
+    }),
   )
 
   const urlAfterVisit = page.url()
@@ -125,8 +125,8 @@ test("test turbo:before-fetch-response open new site", async ({ page }) => {
           responseHTML: await event.detail.fetchResponse.responseHTML,
         }
       },
-      false
-    )
+      false,
+    ),
   )
 
   await page.click("#sample-response")
@@ -151,7 +151,7 @@ test("test visits with data-turbo-stream do not set aria-busy", async ({ page })
 
   assert.ok(
     await noNextAttributeMutationNamed(page, "html", "aria-busy"),
-    "never sets [aria-busy] on the document element"
+    "never sets [aria-busy] on the document element",
   )
 })
 

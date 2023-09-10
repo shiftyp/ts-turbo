@@ -75,7 +75,7 @@ export class FetchRequest {
     method: FetchMethod,
     location: URL,
     body: FetchRequestBody = new URLSearchParams(),
-    target: FrameElement | HTMLFormElement | null = null
+    target: FrameElement | HTMLFormElement | null = null,
   ) {
     this.delegate = delegate
     this.method = method

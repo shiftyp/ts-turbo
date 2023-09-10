@@ -6,7 +6,7 @@ import { PermanentElementMap, getPermanentElementById, queryPermanentElementsAll
 export class StreamMessageRenderer implements BardoDelegate {
   render({ fragment }: StreamMessage) {
     Bardo.preservingPermanentElements(this, getPermanentElementMapForFragment(fragment), () =>
-      document.documentElement.appendChild(fragment)
+      document.documentElement.appendChild(fragment),
     )
   }
 

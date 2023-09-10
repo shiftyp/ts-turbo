@@ -31,7 +31,7 @@ test("test navigating renders a progress bar", async ({ page }) => {
   assert.equal(
     await page.locator("style").evaluate((style) => style.nonce),
     "123",
-    "renders progress bar stylesheet inline with nonce"
+    "renders progress bar stylesheet inline with nonce",
   )
 
   await page.evaluate(() => window.Turbo.setProgressBarDelay(0))
@@ -66,12 +66,12 @@ test("test following a same-origin unannotated link", async ({ page }) => {
   assert.equal(
     await nextAttributeMutationNamed(page, "html", "aria-busy"),
     "true",
-    "sets [aria-busy] on the document element"
+    "sets [aria-busy] on the document element",
   )
   assert.equal(
     await nextAttributeMutationNamed(page, "html", "aria-busy"),
     null,
-    "removes [aria-busy] from the document element"
+    "removes [aria-busy] from the document element",
   )
 })
 
@@ -265,7 +265,7 @@ test("test following a same-origin [download] link", async ({ page }) => {
     await willChangeBody(page, async () => {
       await page.click("#same-origin-download-link")
       await nextBeat()
-    })
+    }),
   )
   assert.equal(pathname(page.url()), "/src/tests/fixtures/navigation.html")
   assert.equal(await visitAction(page), "load")
@@ -314,7 +314,7 @@ test("test skip link with hash-only path scrolls to the anchor without a visit",
     await willChangeBody(page, async () => {
       await page.click('a[href="#main"]')
       await nextBeat()
-    })
+    }),
   )
 
   assert.ok(await isScrolledToSelector(page, "#main"), "scrolled to #main")
@@ -397,7 +397,7 @@ test("test correct referrer header", async ({ page }) => {
   assert.equal(
     headers.referer,
     "http://localhost:9000/src/tests/fixtures/navigation.html",
-    `referer header is correctly set`
+    `referer header is correctly set`,
   )
 })
 
@@ -430,7 +430,7 @@ test("test navigating back whilst a visit is in-flight", async ({ page }) => {
 
   assert.ok(
     await nextEventNamed(page, "turbo:visit"),
-    "navigating back whilst a visit is in-flight starts a non-silent Visit"
+    "navigating back whilst a visit is in-flight starts a non-silent Visit",
   )
 
   await nextBody(page)

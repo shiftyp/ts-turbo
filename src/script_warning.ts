@@ -18,7 +18,7 @@ import { unindent } from "./util"
         ——
         Suppress this warning by adding a "data-turbo-suppress-warning" attribute to: %s
       `,
-        element.outerHTML
+        element.outerHTML,
       )
     }
 

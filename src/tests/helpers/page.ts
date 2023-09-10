@@ -22,7 +22,7 @@ type CancellableEvent = "turbo:click" | "turbo:before-visit"
 export function cancelNextEvent(page: Page, eventName: CancellableEvent): Promise<void> {
   return page.evaluate(
     (eventName) => addEventListener(eventName, (event) => event.preventDefault(), { once: true }),
-    eventName
+    eventName,
   )
 }
 
@@ -131,7 +131,7 @@ export async function noNextBodyMutation(page: Page): Promise<boolean> {
 export async function nextAttributeMutationNamed(
   page: Page,
   elementId: string,
-  attributeName: string
+  attributeName: string,
 ): Promise<string | null> {
   let record: MutationLog | undefined
   while (!record) {
@@ -145,7 +145,7 @@ export async function nextAttributeMutationNamed(
 export async function noNextAttributeMutationNamed(
   page: Page,
   elementId: string,
-  attributeName: string
+  attributeName: string,
 ): Promise<boolean> {
   const records = await readMutationLogs(page, 1)
   return !records.some(([name, _, target]) => name == attributeName && target == elementId)
@@ -197,7 +197,7 @@ async function readArray<T>(page: Page, identifier: string, length?: number): Pr
         return []
       }
     },
-    { identifier, length }
+    { identifier, length },
   )
 }
 
@@ -234,7 +234,7 @@ export function setLocalStorageFromEvent(page: Page, eventName: string, storageK
     ({ eventName, storageKey, storageValue }) => {
       addEventListener(eventName, () => localStorage.setItem(storageKey, storageValue))
     },
-    { eventName, storageKey, storageValue }
+    { eventName, storageKey, storageValue },
   )
 }
 

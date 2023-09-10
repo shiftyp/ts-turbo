@@ -1,6 +1,6 @@
 import { FetchResponse } from "./fetch_response"
 import { FrameElement } from "../elements/frame_element"
-export { TurboBeforeFetchRequestEvent, TurboBeforeFetchResponseEvent, TurboFetchRequestErrorEvent } from "../events"
+import { TurboBeforeFetchRequestEvent, TurboBeforeFetchResponseEvent, TurboFetchRequestErrorEvent } from "../events"
 import { dispatch } from "../util"
 
 export interface FetchRequestDelegate {

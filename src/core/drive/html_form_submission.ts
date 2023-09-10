@@ -23,7 +23,10 @@ export function formEnctypeFromString(encoding: string): FormEnctype {
 export class HTMLFormSubmission {
   readonly location: URL
 
-  constructor(readonly form: HTMLFormElement, readonly submitter?: HTMLElement) {
+  constructor(
+    readonly form: HTMLFormElement,
+    readonly submitter?: HTMLElement,
+  ) {
     const url = expandURL(this.action)
 
     this.location = this.isSafe ? mergeFormDataEntries(url, [...this.body.entries()]) : url
@@ -73,9 +76,12 @@ export class HTMLFormSubmission {
 
   get body(): URLSearchParams | FormData {
     if (this.enctype == FormEnctype.urlEncoded || this.fetchMethod == FetchMethod.get) {
-      const formDataAsStrings = [...this.formData].reduce((entries, [name, value]) => {
-        return entries.concat(typeof value == "string" ? [[name, value]] : [])
-      }, [] as [string, string][])
+      const formDataAsStrings = [...this.formData].reduce(
+        (entries, [name, value]) => {
+          return entries.concat(typeof value == "string" ? [[name, value]] : [])
+        },
+        [] as [string, string][],
+      )
 
       return new URLSearchParams(formDataAsStrings)
     } else {

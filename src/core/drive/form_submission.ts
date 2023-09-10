@@ -83,9 +83,12 @@ export class FormSubmission {
   }
 
   get stringFormData() {
-    return [...this.formData].reduce((entries, [name, value]) => {
-      return entries.concat(typeof value == "string" ? [[name, value]] : [])
-    }, [] as [string, string][])
+    return [...this.formData].reduce(
+      (entries, [name, value]) => {
+        return entries.concat(typeof value == "string" ? [[name, value]] : [])
+      },
+      [] as [string, string][],
+    )
   }
 
   // The submission process

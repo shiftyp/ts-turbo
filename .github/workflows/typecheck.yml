@@ -1,4 +1,4 @@
-name: typecheck
+name: typecheck-pr
 
 on: 
   push:

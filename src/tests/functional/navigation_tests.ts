@@ -52,7 +52,7 @@ test("test navigating link with data-turbo-progress-bar renders a progress bar b
   assert.equal(
     await page.locator("style").evaluate((style) => style.nonce),
     "123",
-    "renders progress bar stylesheet inline with nonce"
+    "renders progress bar stylesheet inline with nonce",
   )
 
   await page.evaluate(() => window.Turbo.setProgressBarDelay(1000))

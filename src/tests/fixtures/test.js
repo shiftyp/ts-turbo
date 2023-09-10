@@ -1,4 +1,4 @@
-(function(eventNames) {
+;(function (eventNames) {
   function serializeToChannel(object, visited = new Set()) {
     const returned = {}
 
@@ -10,7 +10,7 @@
       } else if (value instanceof Element) {
         returned[key] = value.outerHTML
       } else if (typeof value == "object") {
-        if (visited.has(value))  {
+        if (visited.has(value)) {
           returned[key] = "skipped to prevent infinitely recursing"
         } else {
           visited.add(value)
@@ -39,24 +39,28 @@
   }
   window.mutationLogs = []
 
-   new MutationObserver((mutations) => {
-     for (const { attributeName, target } of mutations.filter(({ type }) => type == "attributes")) {
-       if (target instanceof Element) {
-         mutationLogs.push([attributeName, target.id, target.getAttribute(attributeName)])
-       }
-     }
-   }).observe(document, { subtree: true, childList: true, attributes: true })
+  new MutationObserver((mutations) => {
+    for (const { attributeName, target } of mutations.filter(({ type }) => type == "attributes")) {
+      if (target instanceof Element) {
+        mutationLogs.push([attributeName, target.id, target.getAttribute(attributeName)])
+      }
+    }
+  }).observe(document, { subtree: true, childList: true, attributes: true })
 
   window.bodyMutationLogs = []
-  addEventListener("turbo:load", () => {
-    new MutationObserver((mutations) => {
-      for (const { addedNodes } of mutations) {
-        for (const { localName, outerHTML } of addedNodes) {
-          if (localName == "body") bodyMutationLogs.push([outerHTML])
+  addEventListener(
+    "turbo:load",
+    () => {
+      new MutationObserver((mutations) => {
+        for (const { addedNodes } of mutations) {
+          for (const { localName, outerHTML } of addedNodes) {
+            if (localName == "body") bodyMutationLogs.push([outerHTML])
+          }
         }
-      }
-    }).observe(document.documentElement, { childList: true })
-  }, { once: true })
+      }).observe(document.documentElement, { childList: true })
+    },
+    { once: true }
+  )
 })([
   "turbo:click",
   "turbo:before-stream-render",
@@ -75,44 +79,53 @@
   "turbo:frame-load",
   "turbo:frame-render",
   "turbo:frame-missing",
-  "turbo:reload"
+  "turbo:reload",
 ])
 
-customElements.define('custom-link-element', class extends HTMLElement {
-  constructor() {
-    super()
-    this.attachShadow({ mode: 'open' })
-  }
-  connectedCallback() {
-    this.shadowRoot.innerHTML = `
-      <a href="${this.getAttribute('link')}">
-        ${this.getAttribute('text') || `<slot></slot>`}
+customElements.define(
+  "custom-link-element",
+  class extends HTMLElement {
+    constructor() {
+      super()
+      this.attachShadow({ mode: "open" })
+    }
+    connectedCallback() {
+      this.shadowRoot.innerHTML = `
+      <a href="${this.getAttribute("link")}">
+        ${this.getAttribute("text") || `<slot></slot>`}
       </a>
     `
+    }
   }
-})
+)
 
-customElements.define('custom-button', class extends HTMLElement {
-  constructor() {
-    super()
-    this.attachShadow({ mode: 'open' }).innerHTML = `
+customElements.define(
+  "custom-button",
+  class extends HTMLElement {
+    constructor() {
+      super()
+      this.attachShadow({ mode: "open" }).innerHTML = `
       <span>
         Drive in Shadow DOM
       </span>
     `
+    }
   }
-})
+)
 
-customElements.define('turbo-toggle', class extends HTMLElement {
-  constructor() {
-    super()
-    this.attachShadow({ mode: 'open' })
-  }
-  connectedCallback() {
-    this.shadowRoot.innerHTML = `
-      <div data-turbo="${this.getAttribute('turbo') || 'true'}">
+customElements.define(
+  "turbo-toggle",
+  class extends HTMLElement {
+    constructor() {
+      super()
+      this.attachShadow({ mode: "open" })
+    }
+    connectedCallback() {
+      this.shadowRoot.innerHTML = `
+      <div data-turbo="${this.getAttribute("turbo") || "true"}">
         <slot></slot>
       </div>
     `
+    }
   }
-})
+)

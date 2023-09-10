@@ -911,39 +911,6 @@ async function withoutChangingEventListenersCount(page: Page, callback: () => Pr
       document.addEventListener = (
         type: string,
         listener: EventListenerOrEventListenerObject,
-        options?: boolean | AddEventListenerOptions
-      ) => {
-        context.originals.addEventListener.call(document, type, listener, options)
-        context[name] += 1
-      }
-
-      document.removeEventListener = (
-        type: string,
-        listener: EventListenerOrEventListenerObject,
-        options?: boolean | AddEventListenerOptions
-      ) => {
-        context.originals.removeEventListener.call(document, type, listener, options)
-        context[name] -= 1
-      }
-
-      return context[name] || 0
-    }, name)
-  }
-
-async function withoutChangingEventListenersCount(page: Page, callback: () => Promise<void>) {
-  const name = "eventListenersAttachedToDocument"
-  const setup = () => {
-    return page.evaluate((name) => {
-      const context = window as any
-      context[name] = 0
-      context.originals = {
-        addEventListener: document.addEventListener,
-        removeEventListener: document.removeEventListener,
-      }
-
-      document.addEventListener = (
-        type: string,
-        listener: EventListenerOrEventListenerObject,
         options?: boolean | AddEventListenerOptions,
       ) => {
         context.originals.addEventListener.call(document, type, listener, options)

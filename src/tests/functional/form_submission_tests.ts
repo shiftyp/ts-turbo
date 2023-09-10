@@ -153,11 +153,11 @@ test("test standard POST form submission events", async ({ page }) => {
 
 test("test supports transforming a POST submission to a GET in a turbo:submit-start listener", async ({ page }) => {
   await page.evaluate(() =>
-    addEventListener("turbo:submit-start", (({ detail }) => {
+    addEventListener("turbo:submit-start", ({ detail }) => {
       detail.formSubmission.method = "get"
       detail.formSubmission.action = "/src/tests/fixtures/one.html"
       detail.formSubmission.body.set("greeting", "Hello, from an event listener")
-    }))
+    }),
   )
   await page.click("#standard form[method=post] [type=submit]")
   await nextEventNamed(page, "turbo:load")
@@ -168,11 +168,11 @@ test("test supports transforming a POST submission to a GET in a turbo:submit-st
 
 test("test supports transforming a GET submission to a POST in a turbo:submit-start listener", async ({ page }) => {
   await page.evaluate(() =>
-    addEventListener("turbo:submit-start", (({ detail }) => {
+    addEventListener("turbo:submit-start", ({ detail }) => {
       detail.formSubmission.method = "post"
       detail.formSubmission.body.set("path", "/src/tests/fixtures/one.html")
       detail.formSubmission.body.set("greeting", "Hello, from an event listener")
-    }))
+    }),
   )
   await page.click("#standard form[method=get] [type=submit]")
   await nextEventNamed(page, "turbo:load")
@@ -183,12 +183,12 @@ test("test supports transforming a GET submission to a POST in a turbo:submit-st
 
 test("test supports modifying the submission in a turbo:before-fetch-request listener", async ({ page }) => {
   await page.evaluate(() =>
-    addEventListener("turbo:before-fetch-request", (({ detail }) => {
+    addEventListener("turbo:before-fetch-request", ({ detail }) => {
       detail.url = new URL("/src/tests/fixtures/one.html", document.baseURI)
       detail.url.search = new URLSearchParams(detail.fetchOptions.body).toString()
       detail.fetchOptions.body = null
       detail.fetchOptions.method = "get"
-    }))
+    }),
   )
   await page.click("#standard form[method=post] [type=submit]")
   await nextEventNamed(page, "turbo:load")

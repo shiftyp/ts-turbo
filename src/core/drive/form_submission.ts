@@ -9,13 +9,13 @@ export const FormSubmissionState = {
   waiting: "waiting",
   receiving: "receiving",
   stopping: "stopping",
-  stopped: "stopped"
+  stopped: "stopped",
 }
 
 export const FormEnctype = {
   urlEncoded: "application/x-www-form-urlencoded",
   multipart: "multipart/form-data",
-  plain: "text/plain"
+  plain: "text/plain",
 }
 
 function formEnctypeFromString(encoding) {
@@ -36,7 +36,14 @@ export class FormSubmission {
     return Promise.resolve(confirm(message))
   }
 
-  constructor(delegate, method, location, requestBody = new URLSearchParams(), target = null, enctype = FetchEnctype.urlEncoded) {
+  constructor(
+    delegate,
+    method,
+    location,
+    requestBody = new URLSearchParams(),
+    target = null,
+    enctype = FetchEnctype.urlEncoded,
+  ) {
     const [url, body] = buildResourceAndBody(expandURL(location), method, requestBody, enctype)
 
     this.delegate = delegate
@@ -49,7 +56,7 @@ export class FormSubmission {
       headers: { ...this.defaultHeaders },
       body: body,
       signal: this.abortSignal,
-      referrer: this.delegate.referrer?.href
+      referrer: this.delegate.referrer?.href,
     }
     this.enctype = enctype
   }
@@ -177,7 +184,7 @@ export class FormSubmission {
     this.setSubmitsWith()
     dispatch("turbo:submit-start", {
       target: this.formElement,
-      detail: { formSubmission: this }
+      detail: { formSubmission: this },
     })
     this.delegate.formSubmissionStarted(this)
   }
@@ -215,7 +222,7 @@ export class FormSubmission {
     this.resetSubmitterText()
     dispatch("turbo:submit-end", {
       target: this.formElement,
-      detail: { formSubmission: this, ...this.result }
+      detail: { formSubmission: this, ...this.result },
     })
     this.delegate.formSubmissionFinished(this)
   }

@@ -64,9 +64,8 @@ export function fetchEnctypeFromString(encoding: string) {
 export const FetchEnctype = {
   urlEncoded: "application/x-www-form-urlencoded",
   multipart: "multipart/form-data",
-  plain: "text/plain"
+  plain: "text/plain",
 }
-
 
 export type FetchRequestBody = FormData | URLSearchParams
 
@@ -107,7 +106,7 @@ export class FetchRequest {
       headers: { ...this.defaultHeaders },
       body: body,
       signal: this.abortSignal,
-      referrer: this.delegate.referrer?.href
+      referrer: this.delegate.referrer?.href,
     }
     this.enctype = enctype
   }
@@ -263,7 +262,7 @@ function buildResourceAndBody(resource, method, requestBody, enctype) {
 }
 
 function entriesExcludingFiles(requestBody) {
-  const entries = [] as [string, string][]  
+  const entries = [] as [string, string][]
 
   for (const [name, value] of requestBody) {
     if (value instanceof File) continue

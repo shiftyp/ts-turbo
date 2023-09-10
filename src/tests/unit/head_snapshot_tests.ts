@@ -3,9 +3,12 @@ import { parseHTMLDocument } from "../../util"
 import { DOMTestCase } from "../helpers/dom_test_case"
 import { assert } from "@open-wc/testing"
 
-export class HeadSnapshotTests extends DOMTestCase {}
+export class HeadSnapshotTests extends DOMTestCase {
+  public headSnapshot: HeadSnapshot
+}
 
-let subject
+
+let subject:HeadSnapshotTests
 
 setup(() => {
   subject = new HeadSnapshotTests()

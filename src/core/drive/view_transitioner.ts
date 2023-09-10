@@ -1,8 +1,8 @@
-declare global {
-  type ViewTransition = {
-    finished: Promise<void>
-  }
+export type ViewTransition = {
+  finished: Promise<void>
+}
 
+declare global {
   interface Document {
     startViewTransition?(callback: () => Promise<void>): ViewTransition
   }

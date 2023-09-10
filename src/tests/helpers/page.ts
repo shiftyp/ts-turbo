@@ -26,7 +26,7 @@ export function cancelNextEvent(page: Page, eventName: CancellableEvent): Promis
       addEventListener(eventName, (event: TurboClickEvent | TurboBeforeVisitEvent) => event.preventDefault(), {
         once: true,
       }),
-    eventName
+    eventName,
   )
 }
 

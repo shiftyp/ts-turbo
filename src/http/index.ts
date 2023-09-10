@@ -3,4 +3,3 @@ export type {
   TurboBeforeFetchResponseEvent,
   TurboFetchRequestErrorEvent,
 } from "./fetch_request"
-

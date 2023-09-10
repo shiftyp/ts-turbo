@@ -248,7 +248,6 @@ export class FormSubmission {
   get submitsWith() {
     return this.submitter?.getAttribute("data-turbo-submits-with")
   }
-
 }
 
 function buildFormData(formElement: HTMLFormElement, submitter?: HTMLElement): FormData {
@@ -276,9 +275,7 @@ function getCookieValue(cookieName: string | null) {
 
 function responseSucceededWithoutRedirect(response: FetchResponse) {
   return response.statusCode == 200 && !response.redirected
-
 }
-
 
 function mergeFormDataEntries(url: URL, entries: [string, FormDataEntryValue][]): URL {
   const searchParams = new URLSearchParams()

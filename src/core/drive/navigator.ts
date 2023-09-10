@@ -86,7 +86,6 @@ export class Navigator {
       const responseHTML = await fetchResponse.responseHTML
       if (responseHTML) {
         const shouldCacheSnapshot = formSubmission.isSafe
-        const shouldCacheSnapshot = formSubmission.isSafe
         if (!shouldCacheSnapshot) {
           this.view.clearSnapshotCache()
         }

@@ -86,7 +86,7 @@ export class PageRenderer extends Renderer<HTMLBodyElement, PageSnapshot> {
     removeOld = true,
     onAdd = (e: Element): Element => {
       return e
-    }
+    },
   ) {
     const currentElements: Array<Element> = this.currentHeadSnapshot.getElements(localName)
     const newElements: Array<Element> = [...this.newHeadSnapshot.getElements(localName)]

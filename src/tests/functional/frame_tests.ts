@@ -926,7 +926,6 @@ async function withoutChangingEventListenersCount(page: Page, callback: () => Pr
     }, name)
   }
 
-
   const teardown = () => {
     return page.evaluate((name) => {
       const context = window as any

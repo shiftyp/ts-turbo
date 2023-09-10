@@ -7,8 +7,7 @@ export class HeadSnapshotTests extends DOMTestCase {
   public headSnapshot: HeadSnapshot
 }
 
-
-let subject:HeadSnapshotTests
+let subject: HeadSnapshotTests
 
 setup(() => {
   subject = new HeadSnapshotTests()
@@ -53,6 +52,6 @@ test("test trackedElementSignature", async () => {
   // ensure tracked elements are in signature, with nonce removed (as nonce will change per page load)
   assert.equal(
     subject.headSnapshot.trackedElementSignature,
-    '<link rel="stylesheet" href="#tracked.css" type="text/css" data-turbo-track="reload" nonce="">'
+    '<link rel="stylesheet" href="#tracked.css" type="text/css" data-turbo-track="reload" nonce="">',
   )
 })

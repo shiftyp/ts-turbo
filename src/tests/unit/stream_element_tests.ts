@@ -51,7 +51,7 @@ test("test action=append with children ID already present in target", async () =
   const element2 = createStreamElement(
     "append",
     "hello",
-    createTemplateElement('<div id="child_1">New First</div> <div id="child_2">Second</div> tail2 ')
+    createTemplateElement('<div id="child_1">New First</div> <div id="child_2">Second</div> tail2 '),
   )
   assert.equal(subject.find("#hello")?.textContent, "Hello Turbo")
 
@@ -90,7 +90,7 @@ test("test action=prepend with children ID already present in target", async () 
   const element2 = createStreamElement(
     "prepend",
     "hello",
-    createTemplateElement('<div id="child_1">New First</div> <div id="child_2">Second</div> tail2 ')
+    createTemplateElement('<div id="child_1">New First</div> <div id="child_2">Second</div> tail2 '),
   )
   assert.equal(subject.find("#hello")?.textContent, "Hello Turbo")
 

@@ -60,7 +60,7 @@ export class FormSubmission {
   static confirmMethod(
     message: string,
     _element: HTMLFormElement,
-    _submitter: HTMLElement | undefined
+    _submitter: HTMLElement | undefined,
   ): Promise<boolean> {
     return Promise.resolve(confirm(message))
   }
@@ -69,7 +69,7 @@ export class FormSubmission {
     delegate: FormSubmissionDelegate,
     formElement: HTMLFormElement,
     submitter?: HTMLElement,
-    mustRedirect = false
+    mustRedirect = false,
   ) {
     this.delegate = delegate
     this.formElement = formElement
@@ -115,9 +115,12 @@ export class FormSubmission {
   }
 
   get stringFormData() {
-    return [...this.formData].reduce((entries, [name, value]) => {
-      return entries.concat(typeof value == "string" ? [[name, value]] : [])
-    }, [] as [string, string][])
+    return [...this.formData].reduce(
+      (entries, [name, value]) => {
+        return entries.concat(typeof value == "string" ? [[name, value]] : [])
+      },
+      [] as [string, string][],
+    )
   }
 
   // The submission process

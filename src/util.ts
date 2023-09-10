@@ -36,7 +36,7 @@ export function createDocumentFragment(html: string): DocumentFragment {
 
 export function dispatch<T extends CustomEvent>(
   eventName: string,
-  { target, cancelable, detail }: Partial<DispatchOptions<T>> = {}
+  { target, cancelable, detail }: Partial<DispatchOptions<T>> = {},
 ) {
   const event = new CustomEvent<T["detail"]>(eventName, {
     cancelable,

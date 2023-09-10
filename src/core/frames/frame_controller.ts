@@ -291,7 +291,7 @@ export class FrameController
   allowsImmediateRender(
     { element: newFrame }: Snapshot<FrameElement>,
     _isPreview: boolean,
-    options: ViewRenderOptions<FrameElement>
+    options: ViewRenderOptions<FrameElement>,
   ) {
     const event = dispatch<TurboBeforeFrameRenderEvent>("turbo:before-frame-render", {
       target: this.element,
@@ -418,7 +418,7 @@ export class FrameController
 
   private async handleUnvisitableFrameResponse(fetchResponse: FetchResponse) {
     console.warn(
-      `The response (${fetchResponse.statusCode}) from <turbo-frame id="${this.element.id}"> is performing a full page visit due to turbo-visit-control.`
+      `The response (${fetchResponse.statusCode}) from <turbo-frame id="${this.element.id}"> is performing a full page visit due to turbo-visit-control.`,
     )
 
     await this.visitResponse(fetchResponse.response)

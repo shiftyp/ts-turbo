@@ -20,7 +20,7 @@ export abstract class View<
   E extends Element,
   S extends Snapshot<E> = Snapshot<E>,
   R extends Renderer<E, S> = Renderer<E, S>,
-  D extends ViewDelegate<E, S> = ViewDelegate<E, S>
+  D extends ViewDelegate<E, S> = ViewDelegate<E, S>,
 > {
   readonly delegate: D
   readonly element: E

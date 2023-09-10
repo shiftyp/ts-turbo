@@ -122,12 +122,12 @@ test("test standard POST form submission with redirect response", async ({ page 
   assert.equal(
     await nextAttributeMutationNamed(page, "html", "aria-busy"),
     "true",
-    "sets [aria-busy] on the document element"
+    "sets [aria-busy] on the document element",
   )
   assert.equal(
     await nextAttributeMutationNamed(page, "html", "aria-busy"),
     null,
-    "removes [aria-busy] from the document element"
+    "removes [aria-busy] from the document element",
   )
 })
 
@@ -166,12 +166,12 @@ test("test standard POST form submission toggles submitter [disabled] attribute"
   assert.equal(
     await nextAttributeMutationNamed(page, "standard-post-form-submit", "disabled"),
     "",
-    "sets [disabled] on the submitter"
+    "sets [disabled] on the submitter",
   )
   assert.equal(
     await nextAttributeMutationNamed(page, "standard-post-form-submit", "disabled"),
     null,
-    "removes [disabled] from the submitter"
+    "removes [disabled] from the submitter",
   )
 })
 
@@ -181,13 +181,13 @@ test("replaces input value with data-turbo-submits-with on form submission", asy
   assert.equal(
     await nextAttributeMutationNamed(page, "submits-with-form-input", "value"),
     "Saving...",
-    "sets data-turbo-submits-with on the submitter"
+    "sets data-turbo-submits-with on the submitter",
   )
 
   assert.equal(
     await nextAttributeMutationNamed(page, "submits-with-form-input", "value"),
     "Save",
-    "restores the original submitter text value"
+    "restores the original submitter text value",
   )
 })
 
@@ -198,14 +198,14 @@ test("replaces button innerHTML with data-turbo-submits-with on form submission"
   assert.equal(
     await page.textContent("#submits-with-form-button"),
     "Saving...",
-    "sets data-turbo-submits-with on the submitter"
+    "sets data-turbo-submits-with on the submitter",
   )
 
   await nextEventNamed(page, "turbo:submit-end")
   assert.equal(
     await page.textContent("#submits-with-form-button"),
     "Save",
-    "sets data-turbo-submits-with on the submitter"
+    "sets data-turbo-submits-with on the submitter",
   )
 })
 
@@ -220,12 +220,12 @@ test("test standard GET form submission", async ({ page }) => {
   assert.equal(
     await nextAttributeMutationNamed(page, "html", "aria-busy"),
     "true",
-    "sets [aria-busy] on the document element"
+    "sets [aria-busy] on the document element",
   )
   assert.equal(
     await nextAttributeMutationNamed(page, "html", "aria-busy"),
     null,
-    "removes [aria-busy] from the document element"
+    "removes [aria-busy] from the document element",
   )
 })
 
@@ -336,12 +336,12 @@ test("test standard GET form submission toggles submitter [disabled] attribute",
   assert.equal(
     await nextAttributeMutationNamed(page, "standard-get-form-submit", "disabled"),
     "",
-    "sets [disabled] on the submitter"
+    "sets [disabled] on the submitter",
   )
   assert.equal(
     await nextAttributeMutationNamed(page, "standard-get-form-submit", "disabled"),
     null,
-    "removes [disabled] from the submitter"
+    "removes [disabled] from the submitter",
   )
 })
 
@@ -397,7 +397,7 @@ test("test standard POST form submission without an enctype", async ({ page }) =
   const enctype = getSearchParam(page.url(), "enctype")
   assert.ok(
     enctype?.startsWith("application/x-www-form-urlencoded"),
-    "submits a application/x-www-form-urlencoded request"
+    "submits a application/x-www-form-urlencoded request",
   )
 })
 
@@ -599,12 +599,12 @@ test("test frame POST form targeting frame toggles submitter's [disabled] attrib
   assert.equal(
     await nextAttributeMutationNamed(page, "targets-frame-post-form-submit", "disabled"),
     "",
-    "sets [disabled] on the submitter"
+    "sets [disabled] on the submitter",
   )
   assert.equal(
     await nextAttributeMutationNamed(page, "targets-frame-post-form-submit", "disabled"),
     null,
-    "removes [disabled] from the submitter"
+    "removes [disabled] from the submitter",
   )
 })
 
@@ -638,12 +638,12 @@ test("test frame GET form targeting frame toggles submitter's [disabled] attribu
   assert.equal(
     await nextAttributeMutationNamed(page, "targets-frame-get-form-submit", "disabled"),
     "",
-    "sets [disabled] on the submitter"
+    "sets [disabled] on the submitter",
   )
   assert.equal(
     await nextAttributeMutationNamed(page, "targets-frame-get-form-submit", "disabled"),
     null,
-    "removes [disabled] from the submitter"
+    "removes [disabled] from the submitter",
   )
 })
 
@@ -694,7 +694,7 @@ test("test frame POST form submission toggles the ancestor frame's [aria-busy] a
   assert.equal(
     await nextAttributeMutationNamed(page, "frame", "aria-busy"),
     null,
-    "removes [aria-busy] from the #frame"
+    "removes [aria-busy] from the #frame",
   )
 })
 
@@ -711,7 +711,7 @@ test("test frame POST form submission toggles the target frame's [aria-busy] att
   assert.equal(
     await nextAttributeMutationNamed(page, "frame", "aria-busy"),
     null,
-    "removes [aria-busy] from the #frame"
+    "removes [aria-busy] from the #frame",
   )
 })
 
@@ -886,7 +886,7 @@ test("test link method form submission dispatches events from a connected <form>
       for (const form of record.addedNodes) {
         if (form instanceof HTMLFormElement) form.id = "a-form-link"
       }
-    }).observe(document.body, { childList: true })
+    }).observe(document.body, { childList: true }),
   )
 
   await page.click("#stream-link-method-within-form-outside-frame")

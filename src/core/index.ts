@@ -105,7 +105,7 @@ export function renderStreamMessage(message: StreamMessage | string) {
  */
 export function clearCache() {
   console.warn(
-    "Please replace `Turbo.clearCache()` with `Turbo.cache.clear()`. The top-level function is deprecated and will be removed in a future version of Turbo.`"
+    "Please replace `Turbo.clearCache()` with `Turbo.cache.clear()`. The top-level function is deprecated and will be removed in a future version of Turbo.`",
   )
   session.clearCache()
 }
@@ -125,7 +125,7 @@ export function setProgressBarDelay(delay: number) {
 }
 
 export function setConfirmMethod(
-  confirmMethod: (message: string, element: HTMLFormElement, submitter: HTMLElement | undefined) => Promise<boolean>
+  confirmMethod: (message: string, element: HTMLFormElement, submitter: HTMLElement | undefined) => Promise<boolean>,
 ) {
   FormSubmission.confirmMethod = confirmMethod
 }

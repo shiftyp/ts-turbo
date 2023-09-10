@@ -47,7 +47,7 @@ test("test receiving a message without a template", async ({ page }) => {
   await page.evaluate(() =>
     window.Turbo.renderStreamMessage(`
       <turbo-stream action="remove" target="messages"></turbo-stream>
-    `)
+    `),
   )
 
   assert.notOk(await waitUntilNoSelector(page, "#messages"), "removes target element")
@@ -64,7 +64,7 @@ test("test receiving a message with a <script> element", async ({ page }) => {
           </script>
         </template>
       </turbo-stream>
-    `)
+    `),
   )
 
   assert.ok(await waitUntilText(page, "Hello from script"))
@@ -101,7 +101,7 @@ test("test receiving a stream message over SSE", async ({ page }) => {
   await page.evaluate(() => {
     document.body.insertAdjacentHTML(
       "afterbegin",
-      `<turbo-stream-source id="stream-source" src="/__turbo/messages"></turbo-stream-source>`
+      `<turbo-stream-source id="stream-source" src="/__turbo/messages"></turbo-stream-source>`,
     )
   })
   const messages = await page.locator("#messages .message")

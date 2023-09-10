@@ -29,7 +29,7 @@ export class FrameRenderer extends Renderer<FrameElement> {
     newSnapshot: Snapshot<FrameElement>,
     renderElement: Render<FrameElement>,
     isPreview: boolean,
-    willRender = true
+    willRender = true,
   ) {
     super(currentSnapshot, newSnapshot, renderElement, isPreview, willRender)
     this.delegate = delegate

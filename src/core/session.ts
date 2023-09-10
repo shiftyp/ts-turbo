@@ -372,7 +372,7 @@ export class Session
       new HashChangeEvent("hashchange", {
         oldURL: oldURL.toString(),
         newURL: newURL.toString(),
-      })
+      }),
     )
   }
 

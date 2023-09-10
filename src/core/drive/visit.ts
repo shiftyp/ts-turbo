@@ -109,7 +109,7 @@ export class Visit implements FetchRequestDelegate {
     delegate: VisitDelegate,
     location: URL,
     restorationIdentifier: string | undefined,
-    options: Partial<VisitOptions> = {}
+    options: Partial<VisitOptions> = {},
   ) {
     this.delegate = delegate
     this.location = location

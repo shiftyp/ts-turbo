@@ -6,11 +6,11 @@ export type StreamSource = {
   addEventListener(
     type: "message",
     listener: (event: MessageEvent) => void,
-    options?: boolean | AddEventListenerOptions
+    options?: boolean | AddEventListenerOptions,
   ): void
   removeEventListener(
     type: "message",
     listener: (event: MessageEvent) => void,
-    options?: boolean | EventListenerOptions
+    options?: boolean | EventListenerOptions,
   ): void
 }

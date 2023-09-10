@@ -12,7 +12,7 @@ export class Bardo {
   static async preservingPermanentElements(
     delegate: BardoDelegate,
     permanentElementMap: PermanentElementMap,
-    callback: () => void
+    callback: () => void,
   ) {
     const bardo = new this(delegate, permanentElementMap)
     bardo.enter()

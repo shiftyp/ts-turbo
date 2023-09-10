@@ -35,7 +35,7 @@ export class CacheObserver {
 
     if (elements.length) {
       console.warn(
-        `The ${this.deprecatedSelector} selector is deprecated and will be removed in a future version. Use ${this.selector} instead.`
+        `The ${this.deprecatedSelector} selector is deprecated and will be removed in a future version. Use ${this.selector} instead.`,
       )
     }
 

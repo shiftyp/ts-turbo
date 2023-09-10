@@ -13,7 +13,7 @@ test("test preloads snapshot on initial load", async ({ page }) => {
       const cache = window.Turbo.session.preloader.snapshotCache.snapshots
 
       return preloadedUrl in cache
-    })
+    }),
   )
 })
 
@@ -32,7 +32,7 @@ test("test preloads snapshot on page visit", async ({ page }) => {
       const cache = window.Turbo.session.preloader.snapshotCache.snapshots
 
       return preloadedUrl in cache
-    })
+    }),
   )
 })
 
@@ -48,6 +48,6 @@ test("test navigates to preloaded snapshot from frame", async ({ page }) => {
       const cache = window.Turbo.session.preloader.snapshotCache.snapshots
 
       return preloadedUrl in cache
-    })
+    }),
   )
 })

@@ -107,13 +107,13 @@ test("test following a link driving a frame toggles the [aria-busy=true] attribu
   assert.equal(
     await nextAttributeMutationNamed(page, "frame", "aria-busy"),
     "true",
-    "sets [aria-busy=true] on the #frame"
+    "sets [aria-busy=true] on the #frame",
   )
   assert.equal(await nextAttributeMutationNamed(page, "frame", "busy"), null, "removes [busy] on the #frame")
   assert.equal(
     await nextAttributeMutationNamed(page, "frame", "aria-busy"),
     null,
-    "removes [aria-busy] from the #frame"
+    "removes [aria-busy] from the #frame",
   )
 })
 
@@ -125,7 +125,7 @@ test("test following an a[data-turbo-frame=_top] does not toggle the frame's [ar
   assert.ok(await noNextAttributeMutationNamed(page, "frame", "busy"), "does not toggle [busy] on parent frame")
   assert.ok(
     await noNextAttributeMutationNamed(page, "frame", "aria-busy"),
-    "does not toggle [aria-busy=true] on parent frame"
+    "does not toggle [aria-busy=true] on parent frame",
   )
 })
 
@@ -137,7 +137,7 @@ test("test submitting a form[data-turbo-frame=_top] does not toggle the frame's 
   assert.ok(await noNextAttributeMutationNamed(page, "frame", "busy"), "does not toggle [busy] on parent frame")
   assert.ok(
     await noNextAttributeMutationNamed(page, "frame", "aria-busy"),
-    "does not toggle [aria-busy=true] on parent frame"
+    "does not toggle [aria-busy=true] on parent frame",
   )
 })
 
@@ -208,7 +208,7 @@ test("test the turbo:frame-missing event following a link to a page without a ma
           event.target.textContent = "Overridden"
         }
       }) as EventListener,
-      { once: true }
+      { once: true },
     )
   })
   await page.click("#missing-frame-link")
@@ -229,7 +229,7 @@ test("test the turbo:frame-missing event following a link to a page without a ma
 
         visit(response)
       }) as EventListener,
-      { once: true }
+      { once: true },
     )
   })
   await page.click("#missing-frame-link")
@@ -258,7 +258,7 @@ test("test following a link to a page with a matching frame does not dispatch a 
   const src = await attributeForSelector(page, "#frame", "src")
   assert(
     src?.includes("/src/tests/fixtures/frames/frame.html"),
-    "navigates frame without dispatching turbo:frame-missing"
+    "navigates frame without dispatching turbo:frame-missing",
   )
 })
 
@@ -393,13 +393,13 @@ test("test submitting a form that redirects to a page with a <turbo-frame recurs
 
 test("test removing [disabled] attribute from eager-loaded frame navigates it", async ({ page }) => {
   await page.evaluate(() => document.getElementById("frame")?.setAttribute("disabled", ""))
-  await page.evaluate(() =>
-    document.getElementById("frame")?.setAttribute("src", "/src/tests/fixtures/frames/frame.html")
+  await page.evaluate(
+    () => document.getElementById("frame")?.setAttribute("src", "/src/tests/fixtures/frames/frame.html"),
   )
 
   assert.ok(
     await noNextEventOnTarget(page, "frame", "turbo:before-fetch-request"),
-    "[disabled] frames do not submit requests"
+    "[disabled] frames do not submit requests",
   )
 
   await page.evaluate(() => document.getElementById("frame")?.removeAttribute("disabled"))
@@ -525,7 +525,7 @@ test("test invoking .reload() re-fetches the frame's content", async ({ page }) 
       ["frame", "turbo:before-frame-render"],
       ["frame", "turbo:frame-render"],
       ["frame", "turbo:frame-load"],
-    ]
+    ],
   )
 })
 
@@ -597,7 +597,7 @@ test("test navigating pushing URL state from a frame navigation fires events", a
   assert.equal(
     await nextAttributeMutationNamed(page, "frame", "aria-busy"),
     "true",
-    "sets aria-busy on the <turbo-frame>"
+    "sets aria-busy on the <turbo-frame>",
   )
   await nextEventOnTarget(page, "frame", "turbo:before-fetch-request")
   await nextEventOnTarget(page, "frame", "turbo:before-fetch-response")
@@ -866,7 +866,7 @@ test("test navigating a eager frame with a link[method=get] that does not fetch 
   const eventLogs = await readEventLogs(page)
   const fetchLogs = eventLogs.filter(
     ([name, options]) =>
-      name == "turbo:before-fetch-request" && options?.url?.includes("/src/tests/fixtures/frames/frame_for_eager.html")
+      name == "turbo:before-fetch-request" && options?.url?.includes("/src/tests/fixtures/frames/frame_for_eager.html"),
   )
   assert.equal(fetchLogs.length, 1)
 
@@ -907,7 +907,7 @@ async function withoutChangingEventListenersCount(page: Page, callback: () => Pr
       document.addEventListener = (
         type: string,
         listener: EventListenerOrEventListenerObject,
-        options?: boolean | AddEventListenerOptions
+        options?: boolean | AddEventListenerOptions,
       ) => {
         context.originals.addEventListener.call(document, type, listener, options)
         context[name] += 1
@@ -916,7 +916,7 @@ async function withoutChangingEventListenersCount(page: Page, callback: () => Pr
       document.removeEventListener = (
         type: string,
         listener: EventListenerOrEventListenerObject,
-        options?: boolean | AddEventListenerOptions
+        options?: boolean | AddEventListenerOptions,
       ) => {
         context.originals.removeEventListener.call(document, type, listener, options)
         context[name] -= 1

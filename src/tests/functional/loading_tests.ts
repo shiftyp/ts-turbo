@@ -76,8 +76,8 @@ test("test changing src attribute on a frame with loading=lazy defers navigation
   const frameContents = "#loading-lazy turbo-frame h2"
   await nextBeat()
 
-  await page.evaluate(() =>
-    document.querySelector("#loading-lazy turbo-frame")?.setAttribute("src", "/src/tests/fixtures/frames.html")
+  await page.evaluate(
+    () => document.querySelector("#loading-lazy turbo-frame")?.setAttribute("src", "/src/tests/fixtures/frames.html"),
   )
   assert.notOk(await hasSelector(page, frameContents))
 
@@ -92,8 +92,8 @@ test("test changing src attribute on a frame with loading=eager navigates", asyn
   const frameContents = "#loading-eager turbo-frame h2"
   await nextBeat()
 
-  await page.evaluate(() =>
-    document.querySelector("#loading-eager turbo-frame")?.setAttribute("src", "/src/tests/fixtures/frames.html")
+  await page.evaluate(
+    () => document.querySelector("#loading-eager turbo-frame")?.setAttribute("src", "/src/tests/fixtures/frames.html"),
   )
 
   await page.click("#loading-eager summary")
@@ -132,7 +132,7 @@ test("test removing the [complete] attribute of an eager frame reloads the conte
 
   assert.ok(
     await hasSelector(page, "#loading-eager turbo-frame[complete]"),
-    "sets the [complete] attribute after re-loading"
+    "sets the [complete] attribute after re-loading",
   )
 })
 

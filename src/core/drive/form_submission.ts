@@ -166,7 +166,6 @@ export class FormSubmission {
     this.state = FormSubmissionState.waiting
     this.submitter?.setAttribute("disabled", "")
     this.setSubmitsWith()
-    this.setSubmitsWith()
     dispatch<TurboSubmitStartEvent>("turbo:submit-start", {
       target: this.formElement,
       detail: { formSubmission: this },
@@ -204,7 +203,6 @@ export class FormSubmission {
   requestFinished(_request: FetchRequest) {
     this.state = FormSubmissionState.stopped
     this.submitter?.removeAttribute("disabled")
-    this.resetSubmitterText()
     this.resetSubmitterText()
     dispatch<TurboSubmitEndEvent>("turbo:submit-end", {
       target: this.formElement,

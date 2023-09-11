@@ -58,8 +58,7 @@ export class FormSubmission {
 
   constructor(
     delegate: FormSubmissionDelegate,
-    formElement: HTMLFormElement,
-    submitter?: HTMLElement,
+    submission: HTMLFormSubmission,
     mustRedirect = false,
   ) {
     this.delegate = delegate

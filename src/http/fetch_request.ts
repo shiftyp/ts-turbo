@@ -1,6 +1,7 @@
 import { FetchResponse } from "./fetch_response"
 import { FrameElement } from "../elements/frame_element"
 import { dispatch } from "../util"
+import { expandURL } from "../core/url"
 
 export type TurboBeforeFetchRequestEvent = CustomEvent<{
   fetchOptions: RequestInit
@@ -28,14 +29,14 @@ export interface FetchRequestDelegate {
 }
 
 export enum FetchMethod {
-  get,
-  post,
-  put,
-  patch,
-  delete,
+  get = "get",
+  post = "post",
+  put = "put",
+  patch = "patch",
+  delete = "delete"
 }
 
-export function fetchMethodFromString(method: string) {
+export function fetchMethodFromString(method: FetchMethod) {
   switch (method.toLowerCase()) {
     case "get":
       return FetchMethod.get
@@ -74,25 +75,30 @@ export type FetchRequestHeaders = { [header: string]: string }
 export interface FetchRequestOptions {
   headers: FetchRequestHeaders
   body: FetchRequestBody
-  followRedirects: boolean
+  credentials: "same-origin"
+  redirect: "follow"
+  method: FetchMethod
+  signal: AbortSignal
+  referrer?: string
 }
 
 export class FetchRequest {
-  readonly delegate: FetchRequestDelegate
-  readonly method: FetchMethod
-  readonly headers: FetchRequestHeaders
-  readonly url: URL
-  readonly body?: FetchRequestBody
-  readonly target?: FrameElement | HTMLFormElement | null
-  readonly abortController = new AbortController()
+  delegate: FetchRequestDelegate
+  url: URL
+  target?: FrameElement | HTMLFormElement | null
+  abortController = new AbortController()
   private resolveRequestPromise = (_value: any) => {}
+  fetchOptions: FetchRequestOptions
+  enctype: string
+  #resolveRequestPromise = (_value) => {}
 
   constructor(
     delegate: FetchRequestDelegate,
     method: FetchMethod,
     location: URL,
-    body: FetchRequestBody = new URLSearchParams(),
+    requestBody: FetchRequestBody = new URLSearchParams(),
     target: FrameElement | HTMLFormElement | null = null,
+    enctype = FetchEnctype.urlEncoded,
   ) {
     const [url, body] = buildResourceAndBody(expandURL(location), method, requestBody, enctype)
 
@@ -115,7 +121,7 @@ export class FetchRequest {
     return this.fetchOptions.method
   }
 
-  set method(value) {
+  set method(value: FetchMethod) {
     const fetchBody = this.isSafe ? this.url.searchParams : this.fetchOptions.body || new FormData()
     const fetchMethod = fetchMethodFromString(value) || FetchMethod.get
 

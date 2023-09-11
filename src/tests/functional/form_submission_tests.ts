@@ -1,5 +1,6 @@
-import { Page, test } from "@playwright/test"
+import { test } from "@playwright/test"
 import { assert } from "chai"
+import * as Turbo from "../../core"
 import {
   getFromLocalStorage,
   getSearchParam,
@@ -22,6 +23,14 @@ import {
   waitUntilSelector,
   waitUntilNoSelector,
 } from "../helpers/page"
+
+declare global {
+  type Turbo = typeof Turbo
+
+  interface Window {
+    Turbo: Turbo
+  }
+}
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/src/tests/fixtures/form.html")
@@ -153,7 +162,8 @@ test("test standard POST form submission events", async ({ page }) => {
 
 test("test supports transforming a POST submission to a GET in a turbo:submit-start listener", async ({ page }) => {
   await page.evaluate(() =>
-    addEventListener("turbo:submit-start", ({ detail }) => {
+    addEventListener("turbo:submit-start", (event) => {
+      const { detail } = event as CustomEvent
       detail.formSubmission.method = "get"
       detail.formSubmission.action = "/src/tests/fixtures/one.html"
       detail.formSubmission.body.set("greeting", "Hello, from an event listener")
@@ -168,7 +178,8 @@ test("test supports transforming a POST submission to a GET in a turbo:submit-st
 
 test("test supports transforming a GET submission to a POST in a turbo:submit-start listener", async ({ page }) => {
   await page.evaluate(() =>
-    addEventListener("turbo:submit-start", ({ detail }) => {
+    addEventListener("turbo:submit-start", (event) => {
+      const { detail } = event as CustomEvent
       detail.formSubmission.method = "post"
       detail.formSubmission.body.set("path", "/src/tests/fixtures/one.html")
       detail.formSubmission.body.set("greeting", "Hello, from an event listener")
@@ -183,7 +194,8 @@ test("test supports transforming a GET submission to a POST in a turbo:submit-st
 
 test("test supports modifying the submission in a turbo:before-fetch-request listener", async ({ page }) => {
   await page.evaluate(() =>
-    addEventListener("turbo:before-fetch-request", ({ detail }) => {
+    addEventListener("turbo:before-fetch-request", (event) => {
+      const { detail } = event as CustomEvent
       detail.url = new URL("/src/tests/fixtures/one.html", document.baseURI)
       detail.url.search = new URLSearchParams(detail.fetchOptions.body).toString()
       detail.fetchOptions.body = null
@@ -277,7 +289,7 @@ test("test standard GET form submission", async ({ page }) => {
 
 test("test standard GET HTMLFormElement.requestSubmit() with Turbo Action", async ({ page }) => {
   await page.evaluate(() => {
-    const formControl = document.querySelector<HTMLSelectElement>("#external-select")
+    const formControl = document.querySelector("#external-select") as HTMLInputElement
 
     if (formControl && formControl.form) formControl.form.requestSubmit()
   })
@@ -1121,14 +1133,14 @@ test("test following a link with [data-turbo-method] set when html[data-turbo=fa
 
   await page.click("#turbo-method-post-to-targeted-frame")
 
-  assert.equal(await page.textContent("h1"), "Hello", "treats link as a full-page navigation")
+  assert.equal(await page.textContent("h1"), "Hello", "treats link full-page navigation")
 })
 
 test("test following a link with [data-turbo-method] set when Turbo.session.drive = false", async ({ page }) => {
   await page.evaluate(() => (window.Turbo.session.drive = false))
   await page.click("#turbo-method-post-to-targeted-frame")
 
-  assert.equal(await page.textContent("h1"), "Hello", "treats link as a full-page navigation")
+  assert.equal(await page.textContent("h1"), "Hello", "treats link full-page navigation")
 })
 
 test("test stream link method form submission outside frame", async ({ page }) => {
@@ -1210,10 +1222,10 @@ test("test form submission skipped with submitter button[formtarget]", async ({ 
   assert.notOk(await formSubmitEnded(page))
 })
 
-function formSubmitStarted(page: Page) {
+function formSubmitStarted(page) {
   return getFromLocalStorage(page, "formSubmitStarted")
 }
 
-function formSubmitEnded(page: Page) {
+function formSubmitEnded(page) {
   return getFromLocalStorage(page, "formSubmitEnded")
 }

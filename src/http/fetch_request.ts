@@ -90,7 +90,7 @@ export class FetchRequest {
   private resolveRequestPromise = (_value: any) => {}
   fetchOptions: FetchRequestOptions
   enctype: string
-  #resolveRequestPromise = (_value) => {}
+  #resolveRequestPromise = (_value: unknown) => {}
 
   constructor(
     delegate: FetchRequestDelegate,
@@ -250,24 +250,24 @@ export class FetchRequest {
   }
 }
 
-export function isSafe(fetchMethod) {
+export function isSafe(fetchMethod: FetchMethod) {
   return fetchMethodFromString(fetchMethod) == FetchMethod.get
 }
 
-function buildResourceAndBody(resource, method, requestBody, enctype) {
+function buildResourceAndBody(resource: URL, method: FetchMethod, requestBody: FetchRequestBody, enctype: string) {
   const searchParams =
     Array.from(requestBody).length > 0 ? new URLSearchParams(entriesExcludingFiles(requestBody)) : resource.searchParams
 
   if (isSafe(method)) {
-    return [mergeIntoURLSearchParams(resource, searchParams), null]
+    return [mergeIntoURLSearchParams(resource, searchParams), null] as const
   } else if (enctype == FetchEnctype.urlEncoded) {
-    return [resource, searchParams]
+    return [resource, searchParams] as const
   } else {
-    return [resource, requestBody]
+    return [resource, requestBody] as const
   }
 }
 
-function entriesExcludingFiles(requestBody) {
+function entriesExcludingFiles(requestBody: FetchRequestBody) {
   const entries = [] as [string, string][]
 
   for (const [name, value] of requestBody) {
@@ -278,7 +278,7 @@ function entriesExcludingFiles(requestBody) {
   return entries
 }
 
-function mergeIntoURLSearchParams(url, requestBody) {
+function mergeIntoURLSearchParams(url: URL, requestBody: FetchRequestBody) {
   const searchParams = new URLSearchParams(entriesExcludingFiles(requestBody))
 
   url.search = searchParams.toString()

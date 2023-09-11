@@ -29,12 +29,6 @@ export const FormSubmissionState = {
   stopped: "stopped",
 }
 
-enum FormEnctype {
-  urlEncoded = "application/x-www-form-urlencoded",
-  multipart = "multipart/form-data",
-  plain = "text/plain",
-}
-
 export class FormSubmission {
   delegate: FormSubmissionDelegate
   formElement: HTMLFormElement
@@ -131,7 +125,7 @@ export class FormSubmission {
 
   // Fetch request delegate
 
-  prepareRequest(request) {
+  prepareRequest(request: FetchRequest) {
     if (!request.isSafe) {
       const token = getCookieValue(getMetaContent("csrf-param")) || getMetaContent("csrf-token")
       if (token) {
@@ -144,7 +138,7 @@ export class FormSubmission {
     }
   }
 
-  requestStarted(_request) {
+  requestStarted(_request: FetchRequest) {
     this.state = FormSubmissionState.waiting
     this.submitter?.setAttribute("disabled", "")
     this.setSubmitsWith()
@@ -155,14 +149,14 @@ export class FormSubmission {
     this.delegate.formSubmissionStarted(this)
   }
 
-  requestPreventedHandlingResponse(request, response) {
+  requestPreventedHandlingResponse(request:FetchRequest, response: FetchResponse) {
     this.result = { success: response.succeeded, fetchResponse: response }
   }
 
-  requestSucceededWithResponse(request, response) {
+  requestSucceededWithResponse(request: FetchRequest, response: FetchResponse) {
     if (response.clientError || response.serverError) {
       this.delegate.formSubmissionFailedWithResponse(this, response)
-    } else if (this.requestMustRedirect(request) && responseSucceededWithoutRedirect(response)) {
+    } else if (this.requestMustRedirect(request && responseSucceededWithoutRedirect(response))) {
       const error = new Error("Form responses must redirect to another location")
       this.delegate.formSubmissionErrored(this, error)
     } else {
@@ -172,17 +166,17 @@ export class FormSubmission {
     }
   }
 
-  requestFailedWithResponse(request, response) {
+  requestFailedWithResponse(request: FetchRequest, response: FetchResponse) {
     this.result = { success: false, fetchResponse: response }
     this.delegate.formSubmissionFailedWithResponse(this, response)
   }
 
-  requestErrored(request, error) {
+  requestErrored(request: FetchRequest, error: Error) {
     this.result = { success: false, error }
     this.delegate.formSubmissionErrored(this, error)
   }
 
-  requestFinished(_request) {
+  requestFinished(_request: FetchRequest) {
     this.state = FormSubmissionState.stopped
     this.submitter?.removeAttribute("disabled")
     this.resetSubmitterText()
@@ -219,11 +213,11 @@ export class FormSubmission {
     }
   }
 
-  requestMustRedirect(request) {
+  requestMustRedirect(request: FetchRequest) {
     return !request.isSafe && this.mustRedirect
   }
 
-  requestAcceptsTurboStreamResponse(request) {
+  requestAcceptsTurboStreamResponse(request: FetchRequest) {
     return !request.isSafe || hasAttribute("data-turbo-stream", this.submitter, this.formElement)
   }
 
@@ -232,7 +226,7 @@ export class FormSubmission {
   }
 }
 
-function buildFormData(formElement, submitter) {
+function buildFormData(formElement: HTMLFormElement, submitter: HTMLInputElement) {
   const formData = new FormData(formElement)
   const name = submitter?.getAttribute("name")
   const value = submitter?.getAttribute("value")
@@ -244,7 +238,7 @@ function buildFormData(formElement, submitter) {
   return formData
 }
 
-function getCookieValue(cookieName) {
+function getCookieValue(cookieName: string | null) {
   if (cookieName != null) {
     const cookies = document.cookie ? document.cookie.split("; ") : []
     const cookie = cookies.find((cookie) => cookie.startsWith(cookieName))
@@ -255,11 +249,11 @@ function getCookieValue(cookieName) {
   }
 }
 
-function responseSucceededWithoutRedirect(response) {
+function responseSucceededWithoutRedirect(response: FetchResponse) {
   return response.statusCode == 200 && !response.redirected
 }
 
-function getFormAction(formElement, submitter) {
+function getFormAction(formElement: HTMLFormElement, submitter: HTMLInputElement) {
   const formElementAction = typeof formElement.action === "string" ? formElement.action : null
 
   if (submitter?.hasAttribute("formaction")) {
@@ -269,7 +263,7 @@ function getFormAction(formElement, submitter) {
   }
 }
 
-function getAction(formAction, fetchMethod) {
+function getAction(formAction: string, fetchMethod: FetchMethod) {
   const action = expandURL(formAction)
 
   if (isSafe(fetchMethod)) {
@@ -279,11 +273,11 @@ function getAction(formAction, fetchMethod) {
   return action
 }
 
-function getMethod(formElement, submitter) {
+function getMethod(formElement: HTMLFormElement, submitter: HTMLInputElement) {
   const method = submitter?.getAttribute("formmethod") || formElement.getAttribute("method") || ""
-  return fetchMethodFromString(method.toLowerCase()) || FetchMethod.get
+  return fetchMethodFromString(method.toLowerCase() as FetchMethod) || FetchMethod.get
 }
 
-function getEnctype(formElement, submitter) {
+function getEnctype(formElement: HTMLFormElement, submitter: HTMLInputElement) {
   return fetchEnctypeFromString(submitter?.getAttribute("formenctype") || formElement.enctype)
 }

@@ -231,9 +231,9 @@ test("test the turbo:frame-missing event following a link to a page without a ma
         event.preventDefault()
         const { response, visit } = event.detail
 
-        visit(response)
-      }) as EventListener,
-      { once: true },
+        visit(response, {})
+      },
+      { once: true }
     )
   })
   await page.click("#missing-frame-link")

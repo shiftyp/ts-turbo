@@ -33,15 +33,16 @@ export class FormSubmission {
   delegate: FormSubmissionDelegate
   formElement: HTMLFormElement
   submitter: HTMLInputElement
-  formData: FormData
+  formData: FormData | undefined
   fetchRequest: FetchRequest
   mustRedirect: boolean
-  state: string
-  originalSubmitText: string
+  state: string | undefined
+  originalSubmitText: string | undefined
 
   result:
     | { success: true; fetchResponse: FetchResponse }
     | { success: false; fetchResponse?: FetchResponse; error?: Error }
+    | undefined
 
   static confirmMethod(message: string, element: HTMLFormElement, submitter: HTMLInputElement) {
     return Promise.resolve(confirm(message))

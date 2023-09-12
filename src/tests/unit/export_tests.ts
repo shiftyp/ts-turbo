@@ -26,8 +26,6 @@ export type {
   TurboRenderEvent,
   TurboStreamAction,
   TurboStreamActions,
-  TurboSubmitEndEvent,
-  TurboSubmitStartEvent,
   TurboVisitEvent,
 } from "../../index"
 

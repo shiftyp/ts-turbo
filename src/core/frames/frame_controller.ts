@@ -204,11 +204,11 @@ export class FrameController
 
   // Form submit observer delegate
 
-  willSubmitForm(element: HTMLFormElement, submitter?: HTMLElement) {
+  willSubmitForm(element: HTMLFormElement, submitter?: HTMLInputElement) {
     return element.closest("turbo-frame") == this.element && this.shouldInterceptNavigation(element, submitter)
   }
 
-  formSubmitted(element: HTMLFormElement, submitter?: HTMLElement) {
+  formSubmitted(element: HTMLFormElement, submitter?: HTMLInputElement) {
     if (this.formSubmission) {
       this.formSubmission.stop()
     }

@@ -1,4 +1,4 @@
-;(function (eventNames) {
+(function (eventNames) {
   function serializeToChannel(object, visited = new Set()) {
     const returned = {}
 
@@ -27,22 +27,26 @@
 
   window.eventLogs = []
 
-  for (var i = 0; i < eventNames.length; i++) {
-    var eventName = eventNames[i]
+  for (let i = 0; i < eventNames.length; i++) {
+    const eventName = eventNames[i]
     addEventListener(eventName, eventListener, false)
   }
 
   function eventListener(event) {
     const skipped = document.documentElement.getAttribute("data-skip-event-details") || ""
 
-    eventLogs.push([event.type, serializeToChannel(skipped.includes(event.type) ? {} : event.detail), event.target.id])
+    window.eventLogs.push([
+      event.type,
+      serializeToChannel(skipped.includes(event.type) ? {} : event.detail),
+      event.target.id
+    ])
   }
   window.mutationLogs = []
 
   new MutationObserver((mutations) => {
     for (const { attributeName, target } of mutations.filter(({ type }) => type == "attributes")) {
       if (target instanceof Element) {
-        mutationLogs.push([attributeName, target.id, target.getAttribute(attributeName)])
+        window.mutationLogs.push([attributeName, target.id, target.getAttribute(attributeName)])
       }
     }
   }).observe(document, { subtree: true, childList: true, attributes: true })
@@ -54,7 +58,7 @@
       new MutationObserver((mutations) => {
         for (const { addedNodes } of mutations) {
           for (const { localName, outerHTML } of addedNodes) {
-            if (localName == "body") bodyMutationLogs.push([outerHTML])
+            if (localName == "body") window.bodyMutationLogs.push([outerHTML])
           }
         }
       }).observe(document.documentElement, { childList: true })
@@ -79,7 +83,7 @@
   "turbo:frame-load",
   "turbo:frame-render",
   "turbo:frame-missing",
-  "turbo:reload",
+  "turbo:reload"
 ])
 
 customElements.define(

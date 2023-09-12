@@ -25,7 +25,7 @@ export default {
   ],
   browserStartTimeout: 600000,
   nodeResolve: true,
-  files: "./src/tests/unit/**/*_tests.ts",
+  files: "./src/tests/unit/**/*_tests.js",
   testFramework: {
     config: {
       ui: "tdd"

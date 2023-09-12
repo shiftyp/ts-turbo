@@ -78,7 +78,7 @@ export interface FetchRequestOptions {
   followRedirects: boolean
 }
 
-export function isSafe(method) {
+export function isSafe(method: FetchMethod | string) {
   return fetchMethodFromString(method) === FetchMethod.get
 }
 
@@ -157,14 +157,14 @@ export class FetchRequest {
   async perform(): Promise<FetchResponse | void> {
     const { fetchOptions } = this
     this.delegate.prepareRequest(this)
-    await this.allowRequestToBeIntercepted(fetchOptions)
+    await this.#allowRequestToBeIntercepted(fetchOptions)
     try {
       this.delegate.requestStarted(this)
       const response = await fetch(this.request)
       return await this.receive(response)
     } catch (error) {
       if ((error as Error).name !== "AbortError") {
-        if (this.willDelegateErrorHandling(error as Error)) {
+        if (this.#willDelegateErrorHandling(error as Error)) {
           this.delegate.requestErrored(this, error as Error)
         }
         throw error
@@ -198,6 +198,18 @@ export class FetchRequest {
     return fetchResponse
   }
 
+  get fetchOptions(): RequestInit {
+    return {
+      method: this.method,
+      credentials: "same-origin",
+      headers: Object.fromEntries(this.headers.entries()),
+      redirect: "follow",
+      body: this.isSafe ? null : this.body,
+      signal: this.abortSignal,
+      referrer: this.delegate.referrer?.href,
+    }
+  }
+
   get defaultHeaders() {
     return {
       Accept: "text/html, application/xhtml+xml",
@@ -209,20 +221,32 @@ export class FetchRequest {
   }
 
   get abortSignal() {
-    return this.abortController.signal
+    return this.request.signal
   }
 
   acceptResponseType(mimeType: string) {
-    this.headers["Accept"] = [mimeType, this.headers["Accept"]].join(", ")
+    this.headers.set("Accept", [mimeType, this.headers.get("Accept")].join(", "))
   }
 
-  private async allowRequestToBeIntercepted(fetchOptions: RequestInit) {
+  async #allowRequestToBeIntercepted(fetchOptions: RequestInit) {
+    const { request } = this
     const requestInterception = new Promise((resolve) => (this.resolveRequestPromise = resolve))
     const event = dispatch<TurboBeforeFetchRequestEvent>("turbo:before-fetch-request", {
       cancelable: true,
       detail: {
-        fetchOptions,
-        url: this.url,
+        get fetchOptions() {
+          console.warn("`event.detail.fetchOptions` is deprecated. Use `event.detail.request` instead")
+
+          return fetchOptions
+        },
+
+        get url() {
+          console.warn("`event.detail.url` is deprecated. Use `event.detail.request.url` instead")
+
+          return request.url
+        },
+
+        request: this.request,
         resume: this.resolveRequestPromise,
       },
       target: this.target as EventTarget,
@@ -230,11 +254,11 @@ export class FetchRequest {
     if (event.defaultPrevented) await requestInterception
   }
 
-  private willDelegateErrorHandling(error: Error) {
+  #willDelegateErrorHandling(error: Error) {
     const event = dispatch<TurboFetchRequestErrorEvent>("turbo:fetch-request-error", {
       target: this.target as EventTarget,
       cancelable: true,
-      detail: { request: this, error: error },
+      detail: { request: this.request, error: error },
     })
 
     return !event.defaultPrevented

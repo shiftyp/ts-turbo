@@ -11,6 +11,18 @@
         returned[key] = value.outerHTML
       } else if (value instanceof Headers) {
         returned[key] = Object.fromEntries(value.entries())
+      } else if (value instanceof Request) {
+        const { method, url, headers } = value
+
+        returned[key] = serializeToChannel({ method, url, headers })
+      } else if (value instanceof Response) {
+        const { url, status, headers } = value
+
+        returned[key] = serializeToChannel({ url, status, headers })
+      } else if (value instanceof AbortSignal) {
+        returned[key] = "cannot encode AbortSignal instance"
+      } else if (key === "formSubmission") {
+        returned[key] = "cannot encode FormSubmission instance"
       } else if (typeof value == "object") {
         if (visited.has(value)) {
           returned[key] = "skipped to prevent infinitely recursing"

@@ -221,8 +221,8 @@ export class FrameController
 
   // Fetch request delegate
 
-  prepareRequest(request: FetchRequest) {
-    request.headers["Turbo-Frame"] = this.id
+  prepareRequest(request) {
+    request.headers.set("Turbo-Frame", this.id)
 
     if (this.currentNavigationElement?.hasAttribute("data-turbo-stream")) {
       request.acceptResponseType(StreamMessage.contentType)

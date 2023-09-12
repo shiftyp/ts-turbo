@@ -245,7 +245,7 @@ export class Session
     )
   }
 
-  formSubmitted(form: HTMLFormElement, submitter?: HTMLElement) {
+  formSubmitted(form: HTMLFormElement, submitter?: HTMLInputElement) {
     this.navigator.submitForm(form, submitter)
   }
 

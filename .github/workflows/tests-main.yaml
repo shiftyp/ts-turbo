@@ -27,18 +27,11 @@ jobs:
         echo "Actions ChromeDriver is $CHROMEVER"
         echo "CHROMEVER=${CHROMEVER}" >> $GITHUB_ENV
 
-    - name: Lint
-      run: yarn lint
-      continue-on-error: true
-
     - name: Unit Test
       run: yarn test:unit
-      continue-on-error: true
 
     - name: Chrome Test
-      run: yarn test:browser --project=chrome 
-      continue-on-error: true
+      run: yarn test:browser --project=chrome
 
     - name: Firefox Test
       run: yarn test:browser --project=firefox
-      continue-on-error: true

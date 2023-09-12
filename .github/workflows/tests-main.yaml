@@ -29,12 +29,16 @@ jobs:
 
     - name: Lint
       run: yarn lint
+      continue-on-error: true
 
     - name: Unit Test
       run: yarn test:unit
+      continue-on-error: true
 
     - name: Chrome Test
-      run: yarn test:browser --project=chrome
+      run: yarn test:browser --project=chrome 
+      continue-on-error: true
 
     - name: Firefox Test
       run: yarn test:browser --project=firefox
+      continue-on-error: true

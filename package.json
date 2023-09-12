@@ -65,7 +65,7 @@
     "build": "tsc --noEmit false --declaration true --emitDeclarationOnly true --outDir dist/types && rollup -c",
     "build:win": "tsc --noEmit false --declaration true --emitDeclarationOnly true --outDir dist/types & rollup -c",
     "watch": "rollup -wc",
-    "start": "ts-node -O '{\"module\":\"commonjs\"}' src/tests/server.js",
+    "start": "ts-node -O '{\"module\":\"commonjs\"}' src/tests/server.mjs",
     "test": "yarn test:unit && yarn test:browser",
     "test:browser": "playwright test",
     "test:unit": "NODE_OPTIONS=--inspect web-test-runner",

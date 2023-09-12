@@ -1,13 +1,3 @@
-declare global {
-  type ViewTransition = {
-    finished: Promise<void>
-  }
-
-  interface Document {
-    startViewTransition?(callback: () => Promise<void>): ViewTransition
-  }
-}
-
 export class ViewTransitioner {
   private viewTransitionStarted = false
   private lastOperation = Promise.resolve()

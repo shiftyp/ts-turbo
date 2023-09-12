@@ -75,18 +75,22 @@ export type FetchRequestHeaders = { [header: string]: string }
 export interface FetchRequestOptions {
   headers: FetchRequestHeaders
   body: FetchRequestBody
-  credentials: "same-origin"
-  redirect: "follow"
-  method: FetchMethod
-  signal: AbortSignal
-  referrer?: string
+  followRedirects: boolean
+}
+
+export function isSafe(method) {
+  return fetchMethodFromString(method) === FetchMethod.get
+}
+
+export function isSafe(method) {
+  return fetchMethodFromString(method) === FetchMethod.get
 }
 
 export class FetchRequest {
-  delegate: FetchRequestDelegate
-  url: URL
-  target?: FrameElement | HTMLFormElement | null
-  abortController = new AbortController()
+  readonly delegate: FetchRequestDelegate
+  request: Request
+  readonly target?: FrameElement | HTMLFormElement | null
+  readonly abortController = new AbortController()
   private resolveRequestPromise = (_value: any) => {}
   fetchOptions: FetchRequestOptions
   enctype: string
@@ -100,65 +104,45 @@ export class FetchRequest {
     target: FrameElement | HTMLFormElement | null = null,
     enctype = FetchEnctype.urlEncoded,
   ) {
-    const [url, body] = buildResourceAndBody(expandURL(location), method, requestBody, enctype)
+    method = fetchMethodFromString(method)
+
+    const url = expandURL(location)
 
     this.delegate = delegate
-    this.url = url
     this.target = target
-    this.fetchOptions = {
+
+    this.request = new Request(url.href, {
+      method,
+      body: isSafe(method) ? null : body,
       credentials: "same-origin",
       redirect: "follow",
-      method: method,
-      headers: { ...this.defaultHeaders },
-      body: body,
-      signal: this.abortSignal,
       referrer: this.delegate.referrer?.href,
-    }
-    this.enctype = enctype
+      signal: this.abortController.signal,
+      headers: this.defaultHeaders
+    })
   }
 
   get method() {
-    return this.fetchOptions.method
-  }
-
-  set method(value: FetchMethod) {
-    const fetchBody = this.isSafe ? this.url.searchParams : this.fetchOptions.body || new FormData()
-    const fetchMethod = fetchMethodFromString(value) || FetchMethod.get
-
-    this.url.search = ""
-
-    const [url, body] = buildResourceAndBody(this.url, fetchMethod, fetchBody, this.enctype)
-
-    this.url = url
-    this.fetchOptions.body = body
-    this.fetchOptions.method = fetchMethod
+    return this.request.method
   }
 
   get headers() {
-    return this.fetchOptions.headers
-  }
-
-  set headers(value) {
-    this.fetchOptions.headers = value
+    return this.request.headers
   }
 
   get body() {
-    if (this.isSafe) {
-      return this.url.searchParams
-    } else {
-      return this.fetchOptions.body
-    }
+    return this.request.body
   }
 
-  set body(value) {
-    this.fetchOptions.body = value
+  get url() {
+    return this.request.url
   }
 
-  get location(): URL {
+  get location() {
     return this.url
   }
 
-  get params(): URLSearchParams {
+  get params() {
     return this.url.searchParams
   }
 
@@ -176,7 +160,7 @@ export class FetchRequest {
     await this.allowRequestToBeIntercepted(fetchOptions)
     try {
       this.delegate.requestStarted(this)
-      const response = await fetch(this.url.href, fetchOptions)
+      const response = await fetch(this.request)
       return await this.receive(response)
     } catch (error) {
       if ((error as Error).name !== "AbortError") {
@@ -194,7 +178,14 @@ export class FetchRequest {
     const fetchResponse = new FetchResponse(response)
     const event = dispatch<TurboBeforeFetchResponseEvent>("turbo:before-fetch-response", {
       cancelable: true,
-      detail: { fetchResponse },
+      detail: {
+        get fetchResponse() {
+          console.warn("`event.detail.fetchResponse` is deprecated. Use `event.detail.response` instead")
+
+          return fetchResponse
+        },
+        response
+      },
       target: this.target as EventTarget,
     })
     if (event.defaultPrevented) {

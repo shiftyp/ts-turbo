@@ -131,12 +131,12 @@ export class FormSubmission {
     if (!request.isSafe) {
       const token = getCookieValue(getMetaContent("csrf-param")) || getMetaContent("csrf-token")
       if (token) {
-        request.headers["X-CSRF-Token"] = token
+        fetchRequest.headers.set("X-CSRF-Token", token)
       }
     }
 
-    if (this.requestAcceptsTurboStreamResponse(request)) {
-      request.acceptResponseType(StreamMessage.contentType)
+    if (this.requestAcceptsTurboStreamResponse(fetchRequest)) {
+      fetchRequest.acceptResponseType(StreamMessage.contentType)
     }
   }
 
@@ -163,8 +163,17 @@ export class FormSubmission {
       this.delegate.formSubmissionErrored(this, error)
     } else {
       this.state = FormSubmissionState.receiving
-      this.result = { success: true, fetchResponse: response }
-      this.delegate.formSubmissionSucceededWithResponse(this, response)
+      this.result = {
+        success: true,
+        response: fetchResponse.response,
+
+        get fetchResponse() {
+          console.warn("`event.detail.fetchResponse` is deprecated. Use `event.detail.response` instead")
+
+          return fetchResponse
+        }
+      }
+      this.delegate.formSubmissionSucceededWithResponse(this, fetchResponse)
     }
   }
 

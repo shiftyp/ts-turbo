@@ -9,6 +9,8 @@
         returned[key] = value.toJSON()
       } else if (value instanceof Element) {
         returned[key] = value.outerHTML
+      } else if (value instanceof Headers) {
+        returned[key] = Object.fromEntries(value.entries())
       } else if (typeof value == "object") {
         if (visited.has(value)) {
           returned[key] = "skipped to prevent infinitely recursing"

@@ -1,5 +1,6 @@
 import { FetchResponse } from "./fetch_response"
 import { dispatch } from "../util"
+import { expandURL } from "../core/url"
 
 export function fetchMethodFromString(method) {
   switch (method.toLowerCase()) {
@@ -24,17 +25,46 @@ export const FetchMethod = {
   delete: "delete"
 }
 
+export function isSafe(method) {
+  return fetchMethodFromString(method) === FetchMethod.get
+}
+
 export class FetchRequest {
   abortController = new AbortController()
   #resolveRequestPromise = (_value) => {}
 
   constructor(delegate, method, location, body = new URLSearchParams(), target = null) {
+    method = fetchMethodFromString(method)
+
+    const url = expandURL(location)
+
     this.delegate = delegate
-    this.method = method
-    this.headers = this.defaultHeaders
-    this.body = body
-    this.url = location
     this.target = target
+    this.request = new Request(url.href, {
+      method,
+      body: isSafe(method) ? null : body,
+      credentials: "same-origin",
+      redirect: "follow",
+      referrer: this.delegate.referrer?.href,
+      signal: this.abortController.signal,
+      headers: this.defaultHeaders
+    })
+  }
+
+  get method() {
+    return this.request.method
+  }
+
+  get headers() {
+    return this.request.headers
+  }
+
+  get body() {
+    return this.request.body
+  }
+
+  get url() {
+    return this.request.url
   }
 
   get location() {
@@ -59,7 +89,7 @@ export class FetchRequest {
     await this.#allowRequestToBeIntercepted(fetchOptions)
     try {
       this.delegate.requestStarted(this)
-      const response = await fetch(this.url.href, fetchOptions)
+      const response = await fetch(this.request)
       return await this.receive(response)
     } catch (error) {
       if (error.name !== "AbortError") {
@@ -77,7 +107,14 @@ export class FetchRequest {
     const fetchResponse = new FetchResponse(response)
     const event = dispatch("turbo:before-fetch-response", {
       cancelable: true,
-      detail: { fetchResponse },
+      detail: {
+        get fetchResponse() {
+          console.warn("`event.detail.fetchResponse` is deprecated. Use `event.detail.response` instead")
+
+          return fetchResponse
+        },
+        response
+      },
       target: this.target
     })
     if (event.defaultPrevented) {
@@ -92,9 +129,9 @@ export class FetchRequest {
 
   get fetchOptions() {
     return {
-      method: FetchMethod[this.method].toUpperCase(),
+      method: this.method,
       credentials: "same-origin",
-      headers: this.headers,
+      headers: Object.fromEntries(this.headers.entries()),
       redirect: "follow",
       body: this.isSafe ? null : this.body,
       signal: this.abortSignal,
@@ -109,24 +146,36 @@ export class FetchRequest {
   }
 
   get isSafe() {
-    return this.method === FetchMethod.get
+    return isSafe(this.method)
   }
 
   get abortSignal() {
-    return this.abortController.signal
+    return this.request.signal
   }
 
   acceptResponseType(mimeType) {
-    this.headers["Accept"] = [mimeType, this.headers["Accept"]].join(", ")
+    this.headers.set("Accept", [mimeType, this.headers.get("Accept")].join(", "))
   }
 
   async #allowRequestToBeIntercepted(fetchOptions) {
+    const { request } = this
     const requestInterception = new Promise((resolve) => (this.#resolveRequestPromise = resolve))
     const event = dispatch("turbo:before-fetch-request", {
       cancelable: true,
       detail: {
-        fetchOptions,
-        url: this.url,
+        get fetchOptions() {
+          console.warn("`event.detail.fetchOptions` is deprecated. Use `event.detail.request` instead")
+
+          return fetchOptions
+        },
+
+        get url() {
+          console.warn("`event.detail.url` is deprecated. Use `event.detail.request.url` instead")
+
+          return request.url
+        },
+
+        request: this.request,
         resume: this.#resolveRequestPromise
       },
       target: this.target
@@ -138,7 +187,7 @@ export class FetchRequest {
     const event = dispatch("turbo:fetch-request-error", {
       target: this.target,
       cancelable: true,
-      detail: { request: this, error: error }
+      detail: { request: this.request, error: error }
     })
 
     return !event.defaultPrevented

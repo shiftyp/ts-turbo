@@ -175,12 +175,6 @@ export function getProgressBarValue(...elements: (Element | undefined)[]): boole
   return isProgressBar(progressBar) ? progressBar == "true" : null
 }
 
-export function getProgressBarValue(...elements: (Element | undefined)[]): boolean | null {
-  const progressBar = getAttribute("data-turbo-progress-bar", ...elements)
-
-  return isProgressBar(progressBar) ? progressBar == "true" : null
-}
-
 export function getMetaElement(name: string): HTMLMetaElement | null {
   return document.querySelector(`meta[name="${name}"]`)
 }

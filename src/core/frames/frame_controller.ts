@@ -17,7 +17,6 @@ import {
   getHistoryMethodForAction,
   getVisitAction,
   getProgressBarValue,
-  getProgressBarValue,
 } from "../../util"
 import { FormSubmission, FormSubmissionDelegate } from "../drive/form_submission"
 import { Snapshot } from "../snapshot"

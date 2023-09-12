@@ -211,8 +211,8 @@ test("test the turbo:frame-missing event following a link to a page without a ma
           event.preventDefault()
           event.target.textContent = "Overridden"
         }
-      }) as EventListener,
-      { once: true },
+      },
+      { once: true }
     )
   })
   await page.click("#missing-frame-link")

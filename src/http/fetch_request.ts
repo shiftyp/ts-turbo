@@ -118,7 +118,7 @@ export class FetchRequest {
       redirect: "follow",
       referrer: this.delegate.referrer?.href,
       signal: this.abortController.signal,
-      headers: this.defaultHeaders
+      headers: this.defaultHeaders,
     })
   }
 
@@ -184,7 +184,7 @@ export class FetchRequest {
 
           return fetchResponse
         },
-        response
+        response,
       },
       target: this.target as EventTarget,
     })

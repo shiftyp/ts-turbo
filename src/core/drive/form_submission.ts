@@ -153,11 +153,13 @@ export class FormSubmission {
         submitter: this.submitter,
 
         get formSubmission() {
-          console.warn("`event.detail.formSubmission` is deprecated. Use `event.target`, `event.detail.submitter`, and `event.detail.request` instead")
+          console.warn(
+            "`event.detail.formSubmission` is deprecated. Use `event.target`, `event.detail.submitter`, and `event.detail.request` instead",
+          )
 
           return formSubmission
-        }
-      }
+        },
+      },
     })
     this.delegate.formSubmissionStarted(this)
   }
@@ -182,7 +184,7 @@ export class FormSubmission {
           console.warn("`event.detail.fetchResponse` is deprecated. Use `event.detail.response` instead")
 
           return fetchResponse
-        }
+        },
       }
       this.delegate.formSubmissionSucceededWithResponse(this, fetchResponse)
     }
@@ -197,7 +199,7 @@ export class FormSubmission {
         console.warn("`event.detail.fetchResponse` is deprecated. Use `event.detail.response` instead")
 
         return fetchResponse
-      }
+      },
     }
     this.delegate.formSubmissionFailedWithResponse(this, fetchResponse)
   }
@@ -218,13 +220,15 @@ export class FormSubmission {
         submitter: this.submitter,
 
         get formSubmission() {
-          console.warn("`event.detail.formSubmission` is deprecated. Use `event.target`, `event.detail.submitter`, and `event.detail.request` instead")
+          console.warn(
+            "`event.detail.formSubmission` is deprecated. Use `event.target`, `event.detail.submitter`, and `event.detail.request` instead",
+          )
 
           return formSubmission
         },
 
-        ...this.result
-      }
+        ...this.result,
+      },
     })
     this.delegate.formSubmissionFinished(this)
   }

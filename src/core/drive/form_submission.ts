@@ -38,8 +38,10 @@ export class FormSubmission {
   mustRedirect: boolean
   state: string
   originalSubmitText: string
-  
-  result: { success: true; fetchResponse: FetchResponse } | { success: false; fetchResponse?: FetchResponse, error?: Error }
+
+  result:
+    | { success: true; fetchResponse: FetchResponse }
+    | { success: false; fetchResponse?: FetchResponse; error?: Error }
 
   static confirmMethod(message: string, element: HTMLFormElement, submitter: HTMLInputElement) {
     return Promise.resolve(confirm(message))
@@ -149,7 +151,7 @@ export class FormSubmission {
     this.delegate.formSubmissionStarted(this)
   }
 
-  requestPreventedHandlingResponse(request:FetchRequest, response: FetchResponse) {
+  requestPreventedHandlingResponse(request: FetchRequest, response: FetchResponse) {
     this.result = { success: response.succeeded, fetchResponse: response }
   }
 

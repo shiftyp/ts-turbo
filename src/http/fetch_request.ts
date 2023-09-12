@@ -33,7 +33,7 @@ export enum FetchMethod {
   post = "post",
   put = "put",
   patch = "patch",
-  delete = "delete"
+  delete = "delete",
 }
 
 export function fetchMethodFromString(method: FetchMethod) {

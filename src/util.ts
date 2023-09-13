@@ -198,15 +198,15 @@ export function findClosestRecursively<E extends Element>(element: Element | nul
   }
 }
 
-export function elementIsFocusable(element) {
+export function elementIsFocusable(element: HTMLElement) {
   const inertDisabledOrHidden = "[inert], :disabled, [hidden], details:not([open]), dialog:not([open])"
 
   return !!element && element.closest(inertDisabledOrHidden) == null && typeof element.focus == "function"
 }
 
-export function queryAutofocusableElement(elementOrDocumentFragment) {
+export function queryAutofocusableElement(elementOrDocumentFragment: HTMLElement | DocumentFragment) {
   for (const element of elementOrDocumentFragment.querySelectorAll("[autofocus]")) {
-    if (elementIsFocusable(element)) return element
+    if (elementIsFocusable(element as HTMLElement)) return element
     else continue
   }
 

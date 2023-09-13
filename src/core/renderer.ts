@@ -17,7 +17,7 @@ export abstract class Renderer<E extends Element, S extends Snapshot<E> = Snapsh
   readonly promise: Promise<void>
   renderElement: Render<E>
   private resolvingFunctions?: ResolvingFunctions<void>
-  private activeElement: Element | null = null
+  #activeElement: Element | null = null
 
   constructor(currentSnapshot: S, newSnapshot: S, renderElement: Render<E>, isPreview: boolean, willRender = true) {
     this.currentSnapshot = currentSnapshot
@@ -55,7 +55,7 @@ export abstract class Renderer<E extends Element, S extends Snapshot<E> = Snapsh
 
   focusFirstAutofocusableElement() {
     const element = this.connectedSnapshot.firstAutofocusableElement
-    if (elementIsFocusable(element)) {
+    if (element) {
       element.focus()
     }
   }
@@ -63,18 +63,18 @@ export abstract class Renderer<E extends Element, S extends Snapshot<E> = Snapsh
   // Bardo delegate
 
   enteringBardo(currentPermanentElement: Element) {
-    if (this.activeElement) return
+    if (this.#activeElement) return
 
     if (currentPermanentElement.contains(this.currentSnapshot.activeElement)) {
-      this.activeElement = this.currentSnapshot.activeElement
+      this.#activeElement = this.currentSnapshot.activeElement
     }
   }
 
   leavingBardo(currentPermanentElement: Element) {
-    if (currentPermanentElement.contains(this.activeElement) && this.activeElement instanceof HTMLElement) {
-      this.activeElement.focus()
+    if (currentPermanentElement.contains(this.#activeElement) && this.#activeElement instanceof HTMLElement) {
+      this.#activeElement.focus()
 
-      this.activeElement = null
+      this.#activeElement = null
     }
   }
 
@@ -93,8 +93,4 @@ export abstract class Renderer<E extends Element, S extends Snapshot<E> = Snapsh
   get permanentElementMap() {
     return this.currentSnapshot.getPermanentElementMapForSnapshot(this.newSnapshot)
   }
-}
-
-function elementIsFocusable(element: any): element is { focus: () => void } {
-  return element && typeof element.focus == "function"
 }

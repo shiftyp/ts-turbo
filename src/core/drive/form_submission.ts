@@ -127,8 +127,8 @@ export class FormSubmission {
 
   // Fetch request delegate
 
-  prepareRequest(fetchRequest) {
-    if (!fetchRequest.isSafe) {
+  prepareRequest(request: FetchRequest) {
+    if (!request.isSafe) {
       const token = getCookieValue(getMetaContent("csrf-param")) || getMetaContent("csrf-token")
       if (token) {
         fetchRequest.headers.set("X-CSRF-Token", token)
@@ -140,32 +140,19 @@ export class FormSubmission {
     }
   }
 
-  requestStarted(fetchRequest) {
-    const formSubmission = this
-
+  requestStarted(_request: FetchRequest) {
     this.state = FormSubmissionState.waiting
     this.submitter?.setAttribute("disabled", "")
     this.setSubmitsWith()
     dispatch("turbo:submit-start", {
       target: this.formElement,
-      detail: {
-        request: fetchRequest.request,
-        submitter: this.submitter,
-
-        get formSubmission() {
-          console.warn(
-            "`event.detail.formSubmission` is deprecated. Use `event.target`, `event.detail.submitter`, and `event.detail.request` instead",
-          )
-
-          return formSubmission
-        },
-      },
+      detail: { formSubmission: this },
     })
     this.delegate.formSubmissionStarted(this)
   }
 
-  requestPreventedHandlingResponse(fetchRequest, fetchResponse) {
-    this.result = { success: fetchResponse.succeeded, fetchResponse: fetchResponse }
+  requestPreventedHandlingResponse(request: FetchRequest, response: FetchResponse) {
+    this.result = { success: response.succeeded, fetchResponse: response }
   }
 
   requestSucceededWithResponse(request: FetchRequest, response: FetchResponse) {
@@ -184,7 +171,7 @@ export class FormSubmission {
           console.warn("`event.detail.fetchResponse` is deprecated. Use `event.detail.response` instead")
 
           return fetchResponse
-        },
+        }
       }
       this.delegate.formSubmissionSucceededWithResponse(this, fetchResponse)
     }
@@ -204,12 +191,12 @@ export class FormSubmission {
     this.delegate.formSubmissionFailedWithResponse(this, fetchResponse)
   }
 
-  requestErrored(fetchRequest, error) {
+  requestErrored(request: FetchRequest, error: Error) {
     this.result = { success: false, error }
     this.delegate.formSubmissionErrored(this, error)
   }
 
-  requestFinished(fetchRequest) {
+  requestFinished(_request: FetchRequest) {
     this.state = FormSubmissionState.stopped
     this.submitter?.removeAttribute("disabled")
     this.resetSubmitterText()
@@ -229,24 +216,11 @@ export class FormSubmission {
 
         ...this.result,
       },
-    })
     this.delegate.formSubmissionFinished(this)
   }
 
   // Private
-
-  setSubmitsWith() {
-    if (!this.submitter || !this.submitsWith) return
-
-    if (this.submitter.matches("button")) {
-      this.originalSubmitText = this.submitter.innerHTML
-      this.submitter.innerHTML = this.submitsWith
-    } else if (this.submitter.matches("input")) {
-      const input = this.submitter
-      this.originalSubmitText = input.value
-      input.value = this.submitsWith
-    }
-  }
+  
 
   resetSubmitterText() {
     if (!this.submitter || !this.originalSubmitText) return
@@ -259,11 +233,11 @@ export class FormSubmission {
     }
   }
 
-  requestMustRedirect(fetchRequest) {
+  requestMustRedirect(fetchRequest: FetchRequest) {
     return !fetchRequest.isSafe && this.mustRedirect
   }
 
-  requestAcceptsTurboStreamResponse(fetchRequest) {
+  requestAcceptsTurboStreamResponse(fetchRequest: FetchRequest) {
     return !fetchRequest.isSafe || hasAttribute("data-turbo-stream", this.submitter, this.formElement)
   }
 

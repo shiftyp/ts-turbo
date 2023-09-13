@@ -62,10 +62,10 @@ export function fetchEnctypeFromString(encoding: string) {
   }
 }
 
-export const FetchEnctype = {
-  urlEncoded: "application/x-www-form-urlencoded",
-  multipart: "multipart/form-data",
-  plain: "text/plain",
+export enum FetchEnctype {
+  urlEncoded = "application/x-www-form-urlencoded",
+  multipart = "multipart/form-data",
+  plain = "text/plain",
 }
 
 export type FetchRequestBody = FormData | URLSearchParams
@@ -102,24 +102,25 @@ export class FetchRequest {
     location: URL,
     requestBody: FetchRequestBody = new URLSearchParams(),
     target: FrameElement | HTMLFormElement | null = null,
-    enctype = FetchEnctype.urlEncoded,
+    enctype: FetchEnctype = FetchEnctype.urlEncoded,
   ) {
-    method = fetchMethodFromString(method)
+    method = fetchMethodFromString(method) as FetchMethod
 
-    const url = expandURL(location)
+    const [url, body] = buildResourceAndBody(expandURL(location), method, requestBody, enctype)
 
     this.delegate = delegate
     this.target = target
 
     this.request = new Request(url.href, {
-      method,
-      body: isSafe(method) ? null : body,
       credentials: "same-origin",
       redirect: "follow",
+      method: method,
+      headers: { ...this.defaultHeaders },
+      body: body,
+      signal: this.abortSignal,
       referrer: this.delegate.referrer?.href,
-      signal: this.abortController.signal,
-      headers: this.defaultHeaders,
     })
+    this.enctype = enctype
   }
 
   get method() {
@@ -175,15 +176,12 @@ export class FetchRequest {
   }
 
   async receive(response: Response): Promise<FetchResponse> {
+    const { request } = this
     const fetchResponse = new FetchResponse(response)
     const event = dispatch<TurboBeforeFetchResponseEvent>("turbo:before-fetch-response", {
       cancelable: true,
       detail: {
-        get fetchResponse() {
-          console.warn("`event.detail.fetchResponse` is deprecated. Use `event.detail.response` instead")
-
-          return fetchResponse
-        },
+        request,
         response,
       },
       target: this.target as EventTarget,
@@ -198,18 +196,6 @@ export class FetchRequest {
     return fetchResponse
   }
 
-  get fetchOptions(): RequestInit {
-    return {
-      method: this.method,
-      credentials: "same-origin",
-      headers: Object.fromEntries(this.headers.entries()),
-      redirect: "follow",
-      body: this.isSafe ? null : this.body,
-      signal: this.abortSignal,
-      referrer: this.delegate.referrer?.href,
-    }
-  }
-
   get defaultHeaders() {
     return {
       Accept: "text/html, application/xhtml+xml",
@@ -221,7 +207,7 @@ export class FetchRequest {
   }
 
   get abortSignal() {
-    return this.request.signal
+    return this.abortController.signal
   }
 
   acceptResponseType(mimeType: string) {
@@ -229,7 +215,7 @@ export class FetchRequest {
   }
 
   async #allowRequestToBeIntercepted(fetchOptions: RequestInit) {
-    const { request } = this
+    const { url } = this.request
     const requestInterception = new Promise((resolve) => (this.resolveRequestPromise = resolve))
     const event = dispatch<TurboBeforeFetchRequestEvent>("turbo:before-fetch-request", {
       cancelable: true,
@@ -243,11 +229,11 @@ export class FetchRequest {
         get url() {
           console.warn("`event.detail.url` is deprecated. Use `event.detail.request.url` instead")
 
-          return request.url
+          return url
         },
 
         request: this.request,
-        resume: this.resolveRequestPromise,
+        resume: this.#resolveRequestPromise,
       },
       target: this.target as EventTarget,
     })

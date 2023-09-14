@@ -32,7 +32,7 @@ export const FormSubmissionState = {
 export class FormSubmission {
   delegate: FormSubmissionDelegate
   formElement: HTMLFormElement
-  submitter: HTMLInputElement
+  submitter: HTMLInputElement | undefined
   formData: FormData | undefined
   fetchRequest: FetchRequest
   mustRedirect: boolean
@@ -44,14 +44,14 @@ export class FormSubmission {
     | { success: false; fetchResponse?: FetchResponse; error?: Error }
     | undefined
 
-  static confirmMethod(message: string, element: HTMLFormElement, submitter: HTMLInputElement) {
+  static confirmMethod(message: string, element: HTMLFormElement, submitter: HTMLInputElement | undefined) {
     return Promise.resolve(confirm(message))
   }
 
   constructor(
     delegate: FormSubmissionDelegate,
     formElement: HTMLFormElement,
-    submitter: HTMLInputElement,
+    submitter: HTMLInputElement | undefined,
     mustRedirect = false,
   ) {
     const method = getMethod(formElement, submitter)
@@ -229,7 +229,7 @@ export class FormSubmission {
   }
 }
 
-function buildFormData(formElement: HTMLFormElement, submitter: HTMLInputElement) {
+function buildFormData(formElement: HTMLFormElement, submitter: HTMLInputElement | undefined) {
   const formData = new FormData(formElement)
   const name = submitter?.getAttribute("name")
   const value = submitter?.getAttribute("value")
@@ -256,7 +256,7 @@ function responseSucceededWithoutRedirect(response: FetchResponse) {
   return response.statusCode == 200 && !response.redirected
 }
 
-function getFormAction(formElement: HTMLFormElement, submitter: HTMLInputElement) {
+function getFormAction(formElement: HTMLFormElement, submitter: HTMLInputElement | undefined) {
   const formElementAction = typeof formElement.action === "string" ? formElement.action : null
 
   if (submitter?.hasAttribute("formaction")) {
@@ -276,11 +276,11 @@ function getAction(formAction: string, fetchMethod: FetchMethod) {
   return action
 }
 
-function getMethod(formElement: HTMLFormElement, submitter: HTMLInputElement) {
+function getMethod(formElement: HTMLFormElement, submitter: HTMLInputElement | undefined) {
   const method = submitter?.getAttribute("formmethod") || formElement.getAttribute("method") || ""
   return fetchMethodFromString(method.toLowerCase() as FetchMethod) || FetchMethod.get
 }
 
-function getEnctype(formElement: HTMLFormElement, submitter: HTMLInputElement) {
+function getEnctype(formElement: HTMLFormElement, submitter: HTMLInputElement | undefined) {
   return fetchEnctypeFromString(submitter?.getAttribute("formenctype") || formElement.enctype)
 }

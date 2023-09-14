@@ -87,7 +87,6 @@ export class FetchRequest {
   url: URL
   target?: FrameElement | HTMLFormElement | null
   abortController = new AbortController()
-  private resolveRequestPromise = (_value: any) => {}
   fetchOptions: FetchRequestOptions
   enctype: string
   #resolveRequestPromise = (_value: unknown) => {}
@@ -173,7 +172,7 @@ export class FetchRequest {
   async perform(): Promise<FetchResponse | void> {
     const { fetchOptions } = this
     this.delegate.prepareRequest(this)
-    await this.allowRequestToBeIntercepted(fetchOptions)
+    await this.#allowRequestToBeIntercepted(fetchOptions)
     try {
       this.delegate.requestStarted(this)
       const response = await fetch(this.url.href, fetchOptions)
@@ -225,14 +224,14 @@ export class FetchRequest {
     this.headers["Accept"] = [mimeType, this.headers["Accept"]].join(", ")
   }
 
-  private async allowRequestToBeIntercepted(fetchOptions: RequestInit) {
-    const requestInterception = new Promise((resolve) => (this.resolveRequestPromise = resolve))
+  async #allowRequestToBeIntercepted(fetchOptions: RequestInit) {
+    const requestInterception = new Promise((resolve) => (this.#resolveRequestPromise = resolve))
     const event = dispatch<TurboBeforeFetchRequestEvent>("turbo:before-fetch-request", {
       cancelable: true,
       detail: {
         fetchOptions,
         url: this.url,
-        resume: this.resolveRequestPromise,
+        resume: this.#resolveRequestPromise,
       },
       target: this.target as EventTarget,
     })

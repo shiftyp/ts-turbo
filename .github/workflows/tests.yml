@@ -18,14 +18,16 @@ jobs:
 
     - run: yarn install
     - run: yarn run playwright install --with-deps
-    - run: yarn build 2> /dev/null
-      continue-on-error: true
+    - run: yarn build
 
     - name: Set Chrome Version
       run: |
         CHROMEVER="$(chromedriver --version | cut -d' ' -f2)"
         echo "Actions ChromeDriver is $CHROMEVER"
         echo "CHROMEVER=${CHROMEVER}" >> $GITHUB_ENV
+
+    - name: Lint
+      run: yarn lint
 
     - name: Unit Test
       run: yarn test:unit

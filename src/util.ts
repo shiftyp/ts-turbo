@@ -198,7 +198,7 @@ export function findClosestRecursively<E extends Element>(element: Element | nul
   }
 }
 
-export function elementIsFocusable(element: HTMLElement) {
+export function elementIsFocusable(element: HTMLElement | null) {
   const inertDisabledOrHidden = "[inert], :disabled, [hidden], details:not([open]), dialog:not([open])"
 
   return !!element && element.closest(inertDisabledOrHidden) == null && typeof element.focus == "function"
@@ -213,7 +213,7 @@ export function queryAutofocusableElement(elementOrDocumentFragment: HTMLElement
   return null
 }
 
-export async function around(callback, reader) {
+export async function around(callback: () => void, reader: () => Element | null) {
   const before = reader()
 
   callback()

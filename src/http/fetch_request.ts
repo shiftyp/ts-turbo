@@ -74,7 +74,7 @@ export type FetchRequestHeaders = { [header: string]: string }
 
 export interface FetchRequestOptions {
   headers: FetchRequestHeaders
-  body: FetchRequestBody
+  body: FetchRequestBody | null
   credentials: "same-origin"
   redirect: "follow"
   method: FetchMethod

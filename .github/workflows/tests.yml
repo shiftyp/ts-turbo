@@ -5,7 +5,8 @@ on:
     branches: main
 
 jobs:
-  test:
+
+  unit:
 
     runs-on: ubuntu-latest
 
@@ -13,11 +14,29 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: '16'
+        node-version: '18'
         cache: 'yarn'
 
     - run: yarn install
-    - run: yarn run playwright install --with-deps
+    - run: yarn build
+    - name: Unit Test
+      run: yarn test:unit
+
+  playwright:
+
+    runs-on: ubuntu-latest
+
+    container:
+      image: mcr.microsoft.com/playwright:v1.38.0-jammy
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'yarn'
+
+    - run: yarn install
     - run: yarn build
 
     - name: Set Chrome Version
@@ -25,13 +44,6 @@ jobs:
         CHROMEVER="$(chromedriver --version | cut -d' ' -f2)"
         echo "Actions ChromeDriver is $CHROMEVER"
         echo "CHROMEVER=${CHROMEVER}" >> $GITHUB_ENV
-
-    - name: 
-      continue-on-error: true
-      run: yarn lint
-
-    - name: Unit Test
-      run: yarn test:unit
 
     - name: Chrome Test
       run: yarn test:browser --project=chrome

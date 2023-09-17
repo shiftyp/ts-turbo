@@ -85,7 +85,7 @@ export interface FetchRequestOptions {
 export class FetchRequest {
   delegate: FetchRequestDelegate
   url: URL
-  target?: FrameElement | HTMLFormElement | null
+  target: FrameElement | HTMLFormElement | null
   abortController = new AbortController()
   fetchOptions: FetchRequestOptions
   enctype: string
@@ -194,7 +194,7 @@ export class FetchRequest {
     const event = dispatch<TurboBeforeFetchResponseEvent>("turbo:before-fetch-response", {
       cancelable: true,
       detail: { fetchResponse },
-      target: this.target as EventTarget,
+      target: this.target,
     })
     if (event.defaultPrevented) {
       this.delegate.requestPreventedHandlingResponse(this, fetchResponse)
@@ -233,14 +233,14 @@ export class FetchRequest {
         url: this.url,
         resume: this.#resolveRequestPromise,
       },
-      target: this.target as EventTarget,
+      target: this.target,
     })
     if (event.defaultPrevented) await requestInterception
   }
 
   private willDelegateErrorHandling(error: Error) {
     const event = dispatch<TurboFetchRequestErrorEvent>("turbo:fetch-request-error", {
-      target: this.target as EventTarget,
+      target: this.target,
       cancelable: true,
       detail: { request: this, error: error },
     })

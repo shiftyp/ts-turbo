@@ -25,7 +25,7 @@ import { Preloader, PreloaderDelegate } from "./drive/preloader"
 
 export type FormMode = "on" | "off" | "optin"
 export type TimingData = unknown
-export type TurboBeforeCacheEvent = CustomEvent
+export type TurboBeforeCacheEvent = CustomEvent<void>
 export type TurboBeforeRenderEvent = CustomEvent<
   { newBody: HTMLBodyElement; isPreview: boolean } & PageViewRenderOptions
 >

@@ -10,6 +10,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    container:
+      image: mcr.microsoft.com/playwright:v1.38.0-jammy
+
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -19,10 +22,11 @@ jobs:
 
     - run: yarn install
     - run: yarn build
+
     - name: Unit Test
       run: yarn test:unit
 
-  playwright:
+  chrome:
 
     runs-on: ubuntu-latest
 
@@ -48,5 +52,23 @@ jobs:
     - name: Chrome Test
       run: yarn test:browser --project=chrome
 
+  firefox:
+
+    runs-on: ubuntu-latest
+
+    container:
+      image: mcr.microsoft.com/playwright:v1.38.0-jammy
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'yarn'
+
+    - run: yarn install
+    - run: yarn build
+
     - name: Firefox Test
       run: yarn test:browser --project=firefox
+

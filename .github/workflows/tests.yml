@@ -10,9 +10,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    container:
-      image: mcr.microsoft.com/playwright:v1.38.0-jammy
-
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -22,6 +19,7 @@ jobs:
 
     - run: yarn install
     - run: yarn build
+    - run: yarn run playwright install --with-deps
 
     - name: Unit Test
       run: yarn test:unit
@@ -30,9 +28,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    container:
-      image: mcr.microsoft.com/playwright:v1.38.0-jammy
-
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -42,6 +37,7 @@ jobs:
 
     - run: yarn install
     - run: yarn build
+    - run: yarn run playwright install --with-deps
 
     - name: Set Chrome Version
       run: |
@@ -56,9 +52,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    container:
-      image: mcr.microsoft.com/playwright:v1.38.0-jammy
-
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -68,6 +61,7 @@ jobs:
 
     - run: yarn install
     - run: yarn build
+    - run: yarn run playwright install --with-deps
 
     - name: Firefox Test
       run: yarn test:browser --project=firefox

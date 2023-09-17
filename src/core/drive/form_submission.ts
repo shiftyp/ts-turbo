@@ -10,6 +10,14 @@ import { dispatch, getAttribute, getMetaContent, hasAttribute } from "../../util
 import { StreamMessage } from "../streams/stream_message"
 import { FetchResponse } from "../../http/fetch_response"
 
+export type TurboSubmitStartEvent = CustomEvent<{
+  formSubmission: FormSubmission
+}>
+
+export type TurboSubmitEndEvent = CustomEvent<{
+  formSubmission: FormSubmission,
+} & Exclude<FormSubmission["result"], undefined>>
+
 export interface FormSubmissionDelegate {
   formSubmissionStarted(formSubmission: FormSubmission): void
   formSubmissionSucceededWithResponse(formSubmission: FormSubmission, fetchResponse: FetchResponse): void
@@ -145,7 +153,7 @@ export class FormSubmission {
     this.state = FormSubmissionState.waiting
     this.submitter?.setAttribute("disabled", "")
     this.setSubmitsWith()
-    dispatch("turbo:submit-start", {
+    dispatch<TurboSubmitStartEvent>("turbo:submit-start", {
       target: this.formElement,
       detail: { formSubmission: this },
     })
@@ -183,7 +191,7 @@ export class FormSubmission {
     this.state = FormSubmissionState.stopped
     this.submitter?.removeAttribute("disabled")
     this.resetSubmitterText()
-    dispatch("turbo:submit-end", {
+    dispatch<TurboSubmitEndEvent>("turbo:submit-end", {
       target: this.formElement,
       detail: { formSubmission: this, ...this.result },
     })

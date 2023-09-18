@@ -2,7 +2,7 @@ import { Adapter } from "./adapter"
 import { ProgressBar } from "../drive/progress_bar"
 import { SystemStatusCode, Visit, VisitOptions } from "../drive/visit"
 import { FormSubmission } from "../drive/form_submission"
-import { Session } from "../session"
+import { Session, TurboFrameLoadEvent } from "../session"
 import { uuid, dispatch } from "../../util"
 
 export type ReloadReason = StructuredReason | undefined
@@ -121,7 +121,7 @@ export class BrowserAdapter implements Adapter {
   }
 
   reload(reason: ReloadReason) {
-    dispatch("turbo:reload", { detail: reason })
+    dispatch<TurboFrameLoadEvent>("turbo:reload", { detail: reason })
 
     window.location.href = this.location?.toString() || window.location.href
   }

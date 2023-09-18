@@ -27,13 +27,13 @@ export class LinkInterceptor {
     document.removeEventListener("turbo:before-visit", this.willVisit)
   }
 
-  clickBubbled = (event: Event) => {
+  clickBubbled = <EventListener>((event: PointerEvent) => {
     if (this.respondsToEventTarget(event.target)) {
       this.clickEvent = event
     } else {
       delete this.clickEvent
     }
-  }
+  })
 
   linkClicked = <EventListener>((event: TurboClickEvent) => {
     if (this.clickEvent && this.respondsToEventTarget(event.target) && event.target instanceof Element) {

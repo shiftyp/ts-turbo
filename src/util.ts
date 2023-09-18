@@ -1,7 +1,7 @@
 import { Action } from "./core/types"
 
 export type DispatchOptions<T extends CustomEvent> = {
-  target: EventTarget
+  target: EventTarget & (Element | HTMLElement)
   cancelable: boolean
   detail: T["detail"]
 }

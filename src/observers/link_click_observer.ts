@@ -35,7 +35,7 @@ export class LinkClickObserver {
     this.eventTarget.addEventListener("click", this.clickBubbled, false)
   }
 
-  clickBubbled = (event: Event) => {
+  clickBubbled =<EventListener>((event: PointerEvent) => {
     if (event instanceof MouseEvent && this.clickEventIsSignificant(event)) {
       const target = (event.composedPath && event.composedPath()[0]) || event.target
       const link = this.findLinkFromClickTarget(target)
@@ -47,7 +47,7 @@ export class LinkClickObserver {
         }
       }
     }
-  }
+  })
 
   clickEventIsSignificant(event: MouseEvent) {
     return !(

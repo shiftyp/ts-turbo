@@ -4,7 +4,7 @@ import { ReloadReason } from "./native/browser_adapter"
 
 type ResolvingFunctions<T = unknown> = {
   resolve(value: T | PromiseLike<T>): void
-  reject(reason?: any): void
+  reject(reason?: string): void
 }
 
 export type Render<E> = (currentElement: E, newElement: E) => void

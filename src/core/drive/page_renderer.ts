@@ -3,8 +3,8 @@ import { PageSnapshot } from "./page_snapshot"
 import { ReloadReason } from "../native/browser_adapter"
 import { activateScriptElement, waitForLoad } from "../../util"
 
-export class PageRenderer extends Renderer<HTMLBodyElement, PageSnapshot> {
-  static renderElement(currentElement: HTMLBodyElement, newElement: HTMLBodyElement) {
+export class PageRenderer extends Renderer<HTMLBodyElement | HTMLElement, PageSnapshot> {
+  static renderElement(currentElement: HTMLBodyElement | HTMLElement, newElement: HTMLBodyElement | HTMLElement) {
     if (document.body && newElement instanceof HTMLBodyElement) {
       document.body.replaceWith(newElement)
     } else {
@@ -82,7 +82,7 @@ export class PageRenderer extends Renderer<HTMLBodyElement, PageSnapshot> {
     const loadingElements = []
 
     for (const element of this.newHeadStylesheetElements) {
-      loadingElements.push(waitForLoad(element as HTMLLinkElement))
+      loadingElements.push(waitForLoad(element))
 
       document.head.appendChild(element)
     }

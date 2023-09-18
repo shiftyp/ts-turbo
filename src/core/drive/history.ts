@@ -5,7 +5,13 @@ export interface HistoryDelegate {
   historyPoppedToLocationWithRestorationIdentifier(location: URL, restorationIdentifier: string): void
 }
 
-type HistoryMethod = (this: typeof history, state: any, title: string, url?: string | null | undefined) => void
+type HistoryState = {
+  turbo: {
+    restorationIdentifier: string
+  }
+}
+
+type HistoryMethod = typeof window.history.pushState | typeof window.history.replaceState
 
 export type RestorationData = { scrollPosition?: Position }
 
@@ -93,7 +99,7 @@ export class History {
 
   onPopState = (event: PopStateEvent) => {
     if (this.shouldHandlePopState()) {
-      const { turbo } = event.state || {}
+      const { turbo } = event.state as HistoryState || {}
       if (turbo) {
         this.location = new URL(window.location.href)
         const { restorationIdentifier } = turbo

@@ -74,14 +74,14 @@ export class HeadSnapshot extends Snapshot<HTMLHeadElement> {
   }
 
   findMetaElementByName(name: string) {
-    return Object.keys(this.detailsByOuterHTML).reduce(
+    return Object.keys(this.detailsByOuterHTML).reduce<Element | null>(
       (result, outerHTML) => {
         const {
           elements: [element],
         } = this.detailsByOuterHTML[outerHTML]
         return elementIsMetaElementWithName(element, name) ? element : result
       },
-      undefined as Element | undefined,
+      null
     )
   }
 }

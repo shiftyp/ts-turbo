@@ -2,8 +2,8 @@ import { PageSnapshot } from "./page_snapshot"
 import { Renderer } from "../renderer"
 import { activateScriptElement } from "../../util"
 
-export class ErrorRenderer extends Renderer<HTMLBodyElement, PageSnapshot> {
-  static renderElement(currentElement: HTMLBodyElement, newElement: HTMLBodyElement) {
+export class ErrorRenderer extends Renderer<HTMLBodyElement | HTMLElement, PageSnapshot> {
+  static renderElement(currentElement: HTMLBodyElement | HTMLElement, newElement: HTMLBodyElement | HTMLElement) {
     const { documentElement, body } = document
 
     documentElement.replaceChild(newElement, body)

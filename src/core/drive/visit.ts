@@ -29,7 +29,7 @@ export enum TimingMetric {
   visitEnd = "visitEnd",
 }
 
-export type TimingMetrics = Partial<{ [metric in TimingMetric]: any }>
+export type TimingMetrics = Partial<{ [metric in TimingMetric]: number }>
 
 export enum VisitState {
   initialized = "initialized",

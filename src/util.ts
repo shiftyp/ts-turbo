@@ -45,7 +45,7 @@ export function dispatch<T extends CustomEvent>(
     detail,
   })
 
-  if (target && (target as Element).isConnected) {
+  if (target && target.isConnected) {
     target.dispatchEvent(event)
   } else {
     document.documentElement.dispatchEvent(event)
@@ -155,7 +155,7 @@ export function getHistoryMethodForAction(action: Action) {
   }
 }
 
-export function isAction(action: any): action is Action {
+export function isAction(action: string | null): action is Action {
   return action == "advance" || action == "replace" || action == "restore"
 }
 

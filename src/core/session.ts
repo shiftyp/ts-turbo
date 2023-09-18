@@ -27,7 +27,7 @@ export type FormMode = "on" | "off" | "optin"
 export type TimingData = unknown
 export type TurboBeforeCacheEvent = CustomEvent<void>
 export type TurboBeforeRenderEvent = CustomEvent<
-  { newBody: HTMLBodyElement; isPreview: boolean } & PageViewRenderOptions
+  { newBody: HTMLBodyElement | HTMLElement; isPreview: boolean } & PageViewRenderOptions
 >
 export type TurboBeforeVisitEvent = CustomEvent<{ url: string }>
 export type TurboClickEvent = CustomEvent<{ url: string; originalEvent: MouseEvent }>
@@ -52,7 +52,7 @@ export class Session
   readonly navigator = new Navigator(this)
   readonly history = new History(this)
   readonly preloader = new Preloader(this)
-  readonly view = new PageView(this, document.documentElement as HTMLBodyElement)
+  readonly view = new PageView(this, document.documentElement)
   adapter: Adapter = new BrowserAdapter(this)
 
   readonly pageObserver = new PageObserver(this)

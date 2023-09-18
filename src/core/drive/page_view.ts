@@ -6,7 +6,7 @@ import { PageSnapshot } from "./page_snapshot"
 import { SnapshotCache } from "./snapshot_cache"
 import { Visit } from "./visit"
 
-export type PageViewRenderOptions = ViewRenderOptions<HTMLBodyElement>
+export type PageViewRenderOptions = ViewRenderOptions<HTMLBodyElement | HTMLElement>
 
 export interface PageViewDelegate extends ViewDelegate<HTMLBodyElement, PageSnapshot> {
   viewWillCacheSnapshot(): void
@@ -14,7 +14,7 @@ export interface PageViewDelegate extends ViewDelegate<HTMLBodyElement, PageSnap
 
 type PageViewRenderer = PageRenderer | ErrorRenderer
 
-export class PageView extends View<HTMLBodyElement, PageSnapshot, PageViewRenderer, PageViewDelegate> {
+export class PageView extends View<HTMLBodyElement | HTMLElement, PageSnapshot, PageViewRenderer, PageViewDelegate> {
   readonly snapshotCache = new SnapshotCache(10)
   lastRenderedLocation = new URL(location.href)
   forceReloaded = false

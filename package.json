@@ -5,8 +5,7 @@
   "module": "dist/turbo.es2017-esm.js",
   "main": "dist/turbo.es2017-umd.js",
   "files": [
-    "dist/*.js",
-    "dist/*.js.map"
+    "dist/*.js"
   ],
   "repository": {
     "type": "git",
@@ -52,7 +51,7 @@
     "clean:win": "rmdir /s /q dist",
     "build": "rollup -c",
     "build:win": "rollup -c",
-    "watch": "rollup -wc",
+    "watch": "rollup -wmc",
     "start": "node src/tests/server.mjs",
     "test": "yarn test:unit && yarn test:browser",
     "test:browser": "playwright test",

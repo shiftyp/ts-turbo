@@ -3,7 +3,7 @@ import typescript from "@rollup/plugin-typescript"
 
 import { version } from "./package.json"
 const year = new Date().getFullYear()
-const banner = `/*!\nTurbo ${version}\nCopyright © ${year} 37signals LLC\n */`
+const banner = `/*!\nTurbo ${version}\nCopyright © ${year} 37signals LLC\nCopyright © ${year} Ryan Kahn\n*/`
 
 export default [
   {
@@ -13,12 +13,14 @@ export default [
         name: "Turbo",
         file: "dist/turbo.es2017-umd.js",
         format: "umd",
-        banner
+        banner,
+        sourcemap: !process.env.CI
       },
       {
         file: "dist/turbo.es2017-esm.js",
         format: "es",
-        banner
+        banner,
+        sourcemap: !process.env.CI
       }
     ],
     plugins: [

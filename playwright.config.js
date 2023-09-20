@@ -5,23 +5,16 @@ const config = {
     {
       name: "chrome",
       use: {
-        ...devices["Desktop Chrome"],
-        contextOptions: {
-          timeout: 60000
-        }
+        ...devices["Desktop Chrome"]
       }
     },
     {
       name: "firefox",
       use: {
-        ...devices["Desktop Firefox"],
-        contextOptions: {
-          timeout: 60000
-        }
+        ...devices["Desktop Firefox"]
       }
     }
   ],
-  browserStartTimeout: 60000,
   retries: 2,
   testDir: "./src/tests/",
   testMatch: /(functional|integration)\/.*_tests\.js/,

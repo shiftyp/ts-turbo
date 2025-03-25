@@ -43,8 +43,38 @@ export function toCacheKey(url: URL): string {
   return getRequestURL(url)
 }
 
-export function urlsAreEqual(left: Locatable, right: Locatable): boolean {
-  return expandURL(left).href == expandURL(right).href
+export function urlsAreEqual(left: Locatable | null | undefined, right: Locatable | null | undefined): boolean {
+  // Handle null and undefined cases
+  if (left === null && right === null) return true
+  if (left === undefined && right === undefined) return true
+  if (left == null || right == null) return false
+  
+  const leftURL = expandURL(left)
+  const rightURL = expandURL(right)
+  
+  // Compare protocol, host, pathname without query parameters
+  if (leftURL.origin !== rightURL.origin || leftURL.pathname !== rightURL.pathname) {
+    return false
+  }
+  
+  // Compare query parameters (order-independent)
+  const leftParams = new URLSearchParams(leftURL.search)
+  const rightParams = new URLSearchParams(rightURL.search)
+  
+  // Check if the number of parameters matches
+  if ([...leftParams.keys()].length !== [...rightParams.keys()].length) {
+    return false
+  }
+  
+  // Check if all parameters in leftParams exist with the same value in rightParams
+  for (const [key, value] of leftParams.entries()) {
+    if (rightParams.get(key) !== value) {
+      return false
+    }
+  }
+  
+  // Compare hash
+  return leftURL.hash === rightURL.hash
 }
 
 function getPathComponents(url: URL | Locatable): string[] {

@@ -2,7 +2,7 @@
 
 > **Summary**: This section documents JavaScript-related issues discovered during the TypeScript migration related to API compatibility. The issues primarily involve interface mismatches, return type inconsistencies, and improper property access patterns. The TypeScript migration improved API compatibility by ensuring consistent return types, proper handling of readonly properties, and adherence to interface contracts.
 
-**Test Coverage**: [View API Compatibility Tests](/src/tests/unit/api_compatibility_tests.js)
+**Test Coverage**: *Tests removed as they didn't directly test Turbo code*
 
 ## 1. API Compatibility Improvements
 

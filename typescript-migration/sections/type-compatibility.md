@@ -2,9 +2,7 @@
 
 > **Summary**: This section documents JavaScript-specific issues discovered during the TypeScript migration related to type compatibility. These issues could only occur in a dynamically-typed language like JavaScript and were caught by TypeScript's static type system. The issues primarily involve implicit type coercion, dynamic property access, and JavaScript's loose equality comparisons.
 
-**Test Coverage**: [View Type Compatibility Tests](/src/tests/unit/type_compatibility_tests.js)
-
-> **Note**: The type compatibility tests have been converted back to JavaScript from TypeScript while maintaining the same functionality. The tests verify proper handling of URL objects, DOM element properties, and method signature consistency. These tests ensure that type-related issues identified during the TypeScript migration are properly addressed in the JavaScript codebase.
+**Test Coverage**: Tests have been updated to focus specifically on Turbo's type compatibility issues, particularly implicit type coercion and dynamic property access.
 
 ## 1. Implicit Type Coercion
 
@@ -44,28 +42,19 @@
   ```javascript
   // Before: Unchecked property access
   function processResponse(response) {
-    const contentType = response.headers.get("Content-Type")
-    if (contentType.includes("text/html")) {
-      // Implementation assuming contentType is not null
+    const contentType = response.headers.get("content-type")
+    if (contentType && contentType.includes("html")) {
+      // Process HTML response
     }
   }
   
-  // After: Null-safe property access
-  function processResponse(response: Response): void {
-    const contentType = response.headers.get("Content-Type")
-    if (contentType && contentType.includes("text/html")) {
-      // Implementation with null check
+  // After: Added null checks
+  function processResponse(response: Response) {
+    const contentType = response.headers.get("content-type")
+    if (contentType && contentType.includes("html")) {
+      // Process HTML response
     }
   }
-  ```
-
-- 🐛 Fixed unsafe property chain access in [src/core/session.ts](src/core/session.ts)
-  ```javascript
-  // Before: Unsafe property chain access
-  const rootLocation = this.navigator.rootLocation.href
-  
-  // After: Optional chaining to prevent errors
-  const rootLocation = this.navigator?.rootLocation?.href ?? "/"
   ```
 
 ## 3. Loose Equality Comparisons
@@ -133,8 +122,6 @@
     return !defaultPrevented && render
   }
   ```
-
-
 
 ## 6. Inconsistent Interface Definitions
 
@@ -399,6 +386,16 @@
     }
   }
   ```
+
+## 14. Safe Object Creation
+
+> **Summary**: JavaScript allows creating objects from external data without proper type checking, which can lead to runtime errors. TypeScript's static type checking identified these issues during the migration.
+
+- 🐛 Fixed unsafe object creation in [src/core/drive/visit.ts](src/core/drive/visit.ts)
+  ```javascript
+  // Before: Directly creating object from external data
+  const options = JSON.parse(optionsJSON)
+  return new Visit(location, options)
   
   // After: Safe object creation with type checking
   const parsedOptions = JSON.parse(optionsJSON) as Record<string, unknown>
@@ -408,4 +405,3 @@
   }
   return new Visit(location, safeOptions)
   ```
-

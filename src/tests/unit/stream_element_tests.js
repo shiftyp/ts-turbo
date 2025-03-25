@@ -1,7 +1,7 @@
 import { StreamElement } from "../../elements"
 import { nextAnimationFrame } from "../../util"
 import { DOMTestCase } from "../helpers/dom_test_case"
-import { assert } from "@open-wc/testing"
+import { assert, fixture, html, oneEvent } from "@open-wc/testing"
 import { sleep } from "../helpers/page"
 import * as Turbo from "../../index"
 
@@ -29,6 +29,12 @@ setup(() => {
   subject.setup()
   subject.fixtureHTML = `<div><div id="hello">Hello Turbo</div></div>`
 })
+
+teardown(() => {
+  // Clean up any test resources if needed
+})
+
+suite('Stream Element', () => {
 
 test("action=append", async () => {
   const element = createStreamElement("append", "hello", createTemplateElement("<span> Streams</span>"))
@@ -290,4 +296,6 @@ test("action=update method=morph", async () => {
   const childElement = subject.find("div#hello > h1#hello-child-element")
   assert.ok(childElement, "Element div#hello > h1#hello-child-element should exist")
   assert.equal(childElement?.textContent, "Hello Turbo Morphed")
+})
+
 })

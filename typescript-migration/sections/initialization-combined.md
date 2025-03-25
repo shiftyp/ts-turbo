@@ -2,7 +2,7 @@
 
 > **Summary**: This section documents JavaScript-related issues discovered during the TypeScript migration related to configuration validation, session initialization, and lifecycle management. The issues primarily involve null reference errors, race conditions, and browser compatibility problems. The migration improved error handling, observer initialization ordering, and proper cleanup of resources, enhancing the reliability of the session management system.
 
-**Test Coverage**: [View Configuration and Session Management Tests](/src/tests/unit/configuration_session_tests.js)
+**Test Coverage**: *Tests removed as they didn't directly test Turbo code*
 
 ## 1. Session Initialization Issues
 

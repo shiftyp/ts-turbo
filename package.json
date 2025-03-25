@@ -49,6 +49,7 @@
     "idiomorph": "~0.7.2",
     "multer": "^1.4.2",
     "rollup": "^2.35.1",
+    "sinon": "^19.0.1",
     "tslib": "^2.8.1",
     "typescript": "^5.8.2"
   },

@@ -2,7 +2,7 @@
 
 > **Summary**: This section documents JavaScript-related issues discovered during the TypeScript migration related to HTTP request handling. The issues primarily involve URL mutation, inconsistent return value handling, and limited support for different response types. The TypeScript migration improved request handling by properly reconstructing request objects after URL changes, ensuring consistent boolean returns, and adding support for stream responses.
 
-**Test Coverage**: [View Request Handling Tests](/src/tests/unit/request_handling_tests.js)
+**Test Coverage**: *Tests removed as they didn't directly test Turbo code*
 
 ## 1. Request Handling Improvements
 

@@ -2,7 +2,7 @@
 
 > **Summary**: This section documents JavaScript-related issues discovered during the TypeScript migration related to error handling. The issues primarily involve unsafe type casting, potential null reference errors, and basic error class definitions. The TypeScript migration improved error handling by adding proper type assertions, null checks, and enhanced error class definitions with proper inheritance.
 
-**Test Coverage**: [View Error Handling Tests](/src/tests/unit/error_handling_tests.js)
+**Test Coverage**: *Tests removed as they didn't directly test Turbo code*
 
 > **Note**: The error handling tests verify proper type assertions and null checks in error handling, safe DOM manipulation during error handling, custom error classes with proper inheritance, improved error message formatting, and try-catch blocks with proper error handling. These tests ensure that the issues identified during the TypeScript migration are properly addressed in the JavaScript codebase.
 

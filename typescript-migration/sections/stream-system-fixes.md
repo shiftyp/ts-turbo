@@ -1,14 +1,14 @@
-# Additional Stream System Fixes ✅
+# Additional Stream System Fixes 
 
-> **Summary**: This section documents JavaScript-related issues discovered during the TypeScript migration related to stream system functionality. The issues primarily involve event handling memory leaks, race conditions in message processing, and connection lifecycle management. The TypeScript migration improved the stream system by adding proper event cleanup, synchronization in message processing, and better connection lifecycle management based on page visibility.
+> **Summary**: This section documents JavaScript-related issues discovered during the TypeScript migration related to stream system functionality. The issues primarily involve event handling memory leaks, race conditions in message processing, message format handling, and connection lifecycle management. The TypeScript migration improved the stream system by adding proper event cleanup, synchronization in message processing, better connection lifecycle management, and more robust message handling for different input types.
 
-**Test Coverage**: [View Stream System Fixes Tests](/src/tests/unit/stream_system_fixes_tests.js)
+**Test Coverage**: Tests have been updated to focus specifically on Turbo's stream system code, particularly the `StreamMessage` synchronization, message wrapping behavior, navigation prevention during tests, and `StreamElement` event handling.
 
 ## 1. Stream Element Event Handling
 
 > **Summary**: This section addresses issues with event handling in stream elements. The original JavaScript code lacked proper event cleanup when elements were disconnected from the DOM, which could lead to memory leaks. The TypeScript migration added proper event listener cleanup in the disconnectedCallback method to prevent these memory leaks.
 
-- 🐛 Fixed event handling in stream elements to prevent memory leaks in [src/elements/stream_element.ts](src/elements/stream_element.ts)
+- Fixed event handling in stream elements to prevent memory leaks in [src/elements/stream_element.ts](src/elements/stream_element.ts)
   ```javascript
   // Before: No proper event cleanup in JavaScript
   disconnectedCallback() {
@@ -26,7 +26,7 @@
 
 > **Summary**: This section focuses on fixing potential race conditions in stream message processing. The original JavaScript code had synchronization issues when processing messages, which could lead to unpredictable behavior. The TypeScript migration added proper synchronization and deterministic element processing order to prevent race conditions.
 
-- 🐛 Fixed potential race conditions in stream message processing in [src/core/streams/stream_message.ts](src/core/streams/stream_message.ts)
+- Fixed potential race conditions in stream message processing in [src/core/streams/stream_message.ts](src/core/streams/stream_message.ts)
   ```javascript
   // Before: Potential race conditions when processing messages in JavaScript
   process() {
@@ -54,7 +54,7 @@
 
 > **Summary**: This section addresses improvements to stream source connection lifecycle management. The original JavaScript code didn't consider page visibility when managing connections, potentially wasting resources when the page wasn't visible. The TypeScript migration improved connection management by considering page visibility state and implementing proper connection handling based on visibility changes.
 
-- 🔧 Improved stream source connection lifecycle management in [src/elements/stream_source_element.ts](src/elements/stream_source_element.ts)
+- Improved stream source connection lifecycle management in [src/elements/stream_source_element.ts](src/elements/stream_source_element.ts)
   ```javascript
   // Before: No visibility state handling in JavaScript
   connectedCallback() {
@@ -72,7 +72,6 @@
     // Listen for visibility changes to reconnect when page becomes visible
     document.addEventListener("visibilitychange", this.#visibilityChangedCallback)
   }
-  ```
   // Before: No null checking when creating stream sources in JavaScript
   connectedCallback() {
     // Could create invalid stream sources without proper validation

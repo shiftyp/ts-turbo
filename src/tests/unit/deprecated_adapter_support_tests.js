@@ -1,5 +1,5 @@
 import * as Turbo from "../../index"
-import { assert } from "@open-wc/testing"
+import { assert, fixture, html } from "@open-wc/testing"
 
 class DeprecatedAdapterSupportTest {
   constructor() {
@@ -44,18 +44,24 @@ setup(() => {
   Turbo.registerAdapter(adapter)
 })
 
-test("visit proposal location includes deprecated absoluteURL property", async () => {
-  Turbo.navigator.proposeVisit(new URL(window.location.toString()))
-  assert.equal(adapter.locations.length, 1)
-
-  const [location] = adapter.locations
-  assert.equal(location.toString(), location.absoluteURL)
+teardown(() => {
+  // Clean up any test resources if needed
 })
 
-test("visit started location includes deprecated absoluteURL property", async () => {
-  Turbo.visit(window.location.toString())
-  assert.equal(adapter.locations.length, 1)
+suite('Deprecated Adapter Support', () => {
+  test("visit proposal location includes deprecated absoluteURL property", async () => {
+    Turbo.navigator.proposeVisit(new URL(window.location.toString()))
+    assert.equal(adapter.locations.length, 1)
 
-  const [location] = adapter.locations
-  assert.equal(location.toString(), location.absoluteURL)
+    const [location] = adapter.locations
+    assert.equal(location.toString(), location.absoluteURL)
+  })
+
+  test("visit started location includes deprecated absoluteURL property", async () => {
+    Turbo.visit(window.location.toString())
+    assert.equal(adapter.locations.length, 1)
+
+    const [location] = adapter.locations
+    assert.equal(location.toString(), location.absoluteURL)
+  })
 })

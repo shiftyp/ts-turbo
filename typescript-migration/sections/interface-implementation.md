@@ -2,7 +2,7 @@
 
 > **Summary**: This section documents JavaScript-related issues discovered during the TypeScript migration related to interface implementations. The issues primarily involve parameter mismatches between interface definitions and implementations, inconsistent parameter structures, and missing type definitions. The TypeScript migration improved interface consistency by enforcing correct parameter signatures, standardizing parameter structures, and adding explicit type definitions for previously implicit concepts.
 
-**Test Coverage**: [View Interface Implementation Tests](/src/tests/unit/interface_implementation_tests.js)
+**Test Coverage**: *Tests removed as they didn't directly test Turbo code*
 
 > **Note**: The interface implementation tests have been converted back to JavaScript from TypeScript while maintaining the same functionality. The tests verify proper method presence, parameter types, and interface adherence without causing navigation issues. These tests ensure that all required methods are present in implementations and that parameter types are handled correctly.
 

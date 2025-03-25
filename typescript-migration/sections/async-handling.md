@@ -1,10 +1,8 @@
 # Asynchronous Code Handling
 
-> **Summary**: This section documents JavaScript-related issues discovered during the TypeScript migration related to asynchronous code handling. The issues primarily involve Promise chain management, race conditions in async operations, and error handling in asynchronous contexts. The TypeScript migration improved async code handling by adding proper Promise chaining, implementing better error handling for async operations, and fixing race conditions in event-driven code.
+> **Summary**: This section documents Turbo-specific issues discovered during the TypeScript migration related to asynchronous code handling. The issues primarily involve Promise chain management in Turbo's session visits, race conditions in Turbo's stream element rendering, and error handling in Turbo's frame rendering pipeline. The TypeScript migration improved async code handling by adding proper Promise chaining, implementing better error handling for async operations, and fixing race conditions in Turbo's event-driven code.
 
-**Test Coverage**: [View Async Handling Tests](/src/tests/unit/async_handling_tests.js)
-
-> **Note**: The async handling tests have been converted back to JavaScript from TypeScript while maintaining the same functionality. The tests verify proper Promise tracking, caching, and cleanup in stream elements, as well as correct timing and sequencing in asynchronous operations.
+**Test Coverage**: Tests have been updated to focus specifically on Turbo's async handling code, particularly the `session.visit` method, Promise management in stream elements, and animation frame scheduling with `nextAnimationFrame`.
 
 ## 1. Promise Chain Management ✅
 

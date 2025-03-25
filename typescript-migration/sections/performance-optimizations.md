@@ -2,7 +2,7 @@
 
 > **Summary**: This section documents JavaScript-related issues discovered during the TypeScript migration related to performance optimizations. The issues primarily involve memory management inefficiencies, unnecessary DOM operations, and suboptimal data structure usage. The TypeScript migration improved performance by enhancing memory management, optimizing rendering operations, and using more efficient data structures and algorithms.
 
-**Test Coverage**: [View Performance Optimization Tests](/src/tests/unit/performance_optimization_tests.js)
+**Test Coverage**: *Tests removed as they didn't directly test Turbo code*
 
 ## 1. Memory Management Improvements
 

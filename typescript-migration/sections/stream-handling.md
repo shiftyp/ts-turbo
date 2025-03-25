@@ -1,15 +1,13 @@
 # Stream Handling
 
-> **Summary**: This section documents JavaScript-related issues discovered during the TypeScript migration related to stream handling. The issues primarily involve missing action implementations, unsafe property access, lack of type checking for DOM operations, and improper connection management. The TypeScript migration improved stream handling by implementing missing actions, adding proper context binding, ensuring type-safe property access, and enhancing connection management with proper cleanup.
+> **Summary**: This section documents Turbo-specific issues discovered during the TypeScript migration related to stream handling. The issues primarily involve missing action implementations in Turbo's stream system, unsafe property access in Turbo stream elements, lack of type checking for DOM operations in Turbo's stream message renderer, and improper connection management in Turbo's stream source elements. The TypeScript migration improved stream handling by implementing missing actions, adding proper context binding, ensuring type-safe property access, and enhancing connection management with proper cleanup.
 
-**Test Coverage**: [View Stream Handling Tests](/src/tests/unit/stream_handling_tests.js)
+**Test Coverage**: Tests have been updated to focus specifically on Turbo's stream handling code, particularly the `StreamActions` implementation, `StreamMessage.wrap` functionality, and stream element connection management.
 
-> **Note**: The stream handling tests verify proper implementation of stream actions with context binding, type-safe property access in stream elements, safe DOM operations, stream source connection management, and stream message parsing. These tests ensure that the issues identified during the TypeScript migration are properly addressed in the JavaScript codebase.
-
-## 1. Stream Actions Implementation ✅
+## 1. Stream Actions Implementation 
 
 > **Summary**: This section addresses issues with stream action implementations. The original JavaScript code was missing the refresh action constant and implementation despite being referenced elsewhere in the codebase. It also lacked proper context binding for action methods, leading to potential 'this' binding issues. The TypeScript migration added the missing refresh action, implemented the refreshAction method, and added proper context binding with interfaces to ensure type safety.
-- 🔧 Fixed missing action constants and implementation in [src/core/streams/stream_actions.ts](src/core/streams/stream_actions.ts)
+- 
   ```javascript
   // Before: In JavaScript, the StreamActions object was missing the refresh action
   // and lacked proper context binding for action methods
@@ -20,8 +18,8 @@
     prepend: "prepend",
     remove: "remove",
     replace: "replace",
-    update: "update"
-    // Missing refresh action despite being referenced elsewhere in the codebase
+    update: "update",
+    refresh: "refresh"  // Added missing refresh action
   }
   
   // Action methods had no explicit context binding, leading to potential 'this' issues
@@ -31,6 +29,7 @@
   }
   
   // No refreshAction implementation despite being referenced in the codebase
+  // This was implemented in the TypeScript migration
   ```
   
   The TypeScript migration added the missing refresh action constant, implemented the refreshAction method, and added proper context binding with the StreamActionContext interface to ensure type safety:
@@ -78,10 +77,10 @@
     }
   ```
 
-## 2. Stream Element Type Safety ✅
+## 2. Stream Element Type Safety 
 
 > **Summary**: This section focuses on improving type safety in stream elements. The original JavaScript code had unsafe property access patterns and lacked type checking for DOM operations, which could lead to runtime errors. The TypeScript migration added type-safe property access, proper type casting, and enhanced error handling for DOM operations.
-- 🐛 Fixed unsafe property access and type casting in [src/elements/stream_element.ts](src/elements/stream_element.ts)
+- 
   ```javascript
   // Before: Unsafe property access and type casting in JavaScript
   get performAction() {
@@ -109,7 +108,7 @@
     this.#raise("action attribute is missing")
   }
   ```
-- 🐛 Added proper type checking for DOM operations to prevent runtime errors
+- 
   ```javascript
   // Before: No type checking for DOM operations
   get targetElements() {
@@ -143,10 +142,10 @@
   }
   ```
 
-## 3. Stream Source Element Connection Management ✅
+## 3. Stream Source Element Connection Management 
 
 > **Summary**: This section addresses issues with stream source connection management. The original JavaScript code lacked proper type checking and cleanup in the disconnection callback, potentially leading to resource leaks. The TypeScript migration enhanced the StreamSourceElement class with proper type checking and specific cleanup logic based on the type of stream source.
-- 🐛 Enhanced the `StreamSourceElement` class to include proper type checking and cleanup in [src/elements/stream_source_element.ts](src/elements/stream_source_element.ts)
+- 
   ```javascript
   // Before: No type checking or proper cleanup in disconnectedCallback
   disconnectedCallback() {
@@ -166,7 +165,7 @@
   }
   ```
 
-- 🔧 Added explicit type declaration for streamSource in [src/elements/stream_source_element.ts](src/elements/stream_source_element.ts)
+- 
   ```javascript
   // Before: No explicit type declaration in JavaScript
   class StreamSourceElement extends HTMLElement {
@@ -186,7 +185,7 @@
     }
   }
     ```
-- 🐛 Added proper type checking for stream source creation
+- 
   ```javascript
   // Before: No type checking for stream source creation
   requestConnect() {
@@ -220,7 +219,7 @@
   ```
 
 ## 4. Stream Message Type Safety
-- 🐛 Added type safety to the `StreamMessage` class in [src/core/streams/stream_message.ts](src/core/streams/stream_message.ts)
+- 
   ```javascript
   // Before: No type checking for message parameters
   static wrap(message) {
@@ -240,7 +239,7 @@
     }
   }
   ```
-- 🐛 Improved event handling and DOM operations
+- 
   ```javascript
   // Before: Potential undefined event handling
   processMessage(message) {
@@ -257,7 +256,7 @@
     }
   }
   ```
-- 🐛 Improved renderer initialization to prevent potential undefined references in [src/core/streams/stream_message_renderer.ts](src/core/streams/stream_message_renderer.ts)
+- 
   ```javascript
   // Before: Potential undefined reference
   constructor(delegate, message) {

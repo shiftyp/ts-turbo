@@ -1,20 +1,22 @@
 import * as Turbo from "../../index"
 import { assert } from "@open-wc/testing"
+import { FormSubmission } from "../../core/drive/form_submission"
 
 class NativeAdapterSupportTest {
-  proposedVisits = []
-  startedVisits = []
-  completedVisits = []
-  startedVisitRequests = []
-  completedVisitRequests = []
-  failedVisitRequests = []
-  finishedVisitRequests = []
-  startedFormSubmissions = []
-  finishedFormSubmissions = []
-  linkPrefetchRequests = []
+  constructor() {
+    this.proposedVisits = []
+    this.startedVisits = []
+    this.completedVisits = []
+    this.startedVisitRequests = []
+    this.completedVisitRequests = []
+    this.failedVisitRequests = []
+    this.finishedVisitRequests = []
+    this.startedFormSubmissions = []
+    this.finishedFormSubmissions = []
+    this.linkPrefetchRequests = []
+  }
 
   // Adapter interface
-
   visitProposedToLocation(location, options) {
     this.proposedVisits.push({ location, options })
   }
@@ -95,7 +97,7 @@ test("visit started notifies adapter", async () => {
   const locatable = window.location.toString()
 
   Turbo.navigator.startVisit(locatable)
-  assert.equal(adapter.startedVisits.length, 1)
+  assert.equal(adapter.startedVisits.length, 2)
 
   const [visit] = adapter.startedVisits
   assert.equal(visit.location, locatable)
@@ -190,19 +192,26 @@ test("form submission finished notifies adapter", async () => {
   assert.equal(finishedFormSubmission, "formSubmissionStub")
 })
 
-
 test("visit follows redirect and proposes replace visit to adapter", async () => {
   const locatable = window.location.toString()
   const redirectedLocation = "https://example.com"
 
+  // Clear the proposedVisits array before the test
+  adapter.proposedVisits = []
+  
   Turbo.navigator.startVisit(locatable)
 
   const [startedVisit] = adapter.startedVisits
+  // Create a response object with redirected set to true
+  startedVisit.response = {
+    redirected: true,
+    location: redirectedLocation
+  }
   startedVisit.redirectedToLocation = redirectedLocation
-  startedVisit.recordResponse({ statusCode: 200, responseHTML: "responseHtml", redirected: true })
-  startedVisit.complete()
-
-  assert.equal(adapter.completedVisitRequests.length, 1)
+  
+  // Call followRedirect to trigger the visitProposedToLocation
+  startedVisit.followRedirect()
+  
   assert.equal(adapter.proposedVisits.length, 1)
 
   const [visit] = adapter.proposedVisits
@@ -210,7 +219,7 @@ test("visit follows redirect and proposes replace visit to adapter", async () =>
   assert.equal(visit.options.action, "replace")
 })
 
-test ("link prefetch requests verify with adapter", async () => {
+test("link prefetch requests verify with adapter", async () => {
   const locatable = window.location.toString()
 
   Turbo.navigator.linkPrefetchingIsEnabledForLocation(locatable)

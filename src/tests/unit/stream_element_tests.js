@@ -279,7 +279,7 @@ test("action=update method=morph", async () => {
   const element = createStreamElement("update", "hello", templateElement, { method: "morph" })
   const target = subject.find("div#hello")
   assert.equal(target?.textContent, "Hello Turbo")
-  element.setAttribute("children-only", true)
+  element.setAttribute("children-only", "true")
 
   subject.append(element)
 
@@ -287,5 +287,7 @@ test("action=update method=morph", async () => {
 
   assert.ok(subject.find("div#hello"))
   assert.ok(subject.find("div#hello > h1#hello-child-element"))
-  assert.equal(subject.find("div#hello > h1#hello-child-element").textContent, "Hello Turbo Morphed")
+  const childElement = subject.find("div#hello > h1#hello-child-element")
+  assert.ok(childElement, "Element div#hello > h1#hello-child-element should exist")
+  assert.equal(childElement?.textContent, "Hello Turbo Morphed")
 })

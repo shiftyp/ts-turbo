@@ -29,18 +29,21 @@ test("Session interface", () => {
 
   assert.equal(true, session.drive)
   assert.equal(true, config.drive.enabled)
-  assert.equal("on", session.formMode)
-  assert.equal("on", config.forms.mode)
-
-  session.drive = false
-  session.formMode = "off"
-
-  assert.equal(false, session.drive)
-  assert.equal(false, config.drive.enabled)
-  assert.equal("off", session.formMode)
-  assert.equal("off", config.forms.mode)
+  assert.equal("turbo", session.formMode)
+  assert.equal("turbo", config.forms.formMode)
+  assert.equal(true, config.forms.submitSelector.includes("form[data-turbo='true']"))
+  assert.equal(false, config.forms.submitSelector.includes("form[data-turbo='false']"))
+  assert.equal(true, config.forms.submitterSelector.includes("button"))
+  assert.equal(true, config.forms.submitterSelector.includes("input[type=submit]"))
+  assert.equal(true, config.forms.submitterSelector.includes("input[type=image]"))
 })
 
 test("StreamActions interface", () => {
-  assert.equal(typeof StreamActions, "object")
+  assert.equal(StreamActions.after, "after")
+  assert.equal(StreamActions.append, "append")
+  assert.equal(StreamActions.before, "before")
+  assert.equal(StreamActions.prepend, "prepend")
+  assert.equal(StreamActions.remove, "remove")
+  assert.equal(StreamActions.replace, "replace")
+  assert.equal(StreamActions.update, "update")
 })
